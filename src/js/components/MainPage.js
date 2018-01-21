@@ -43,7 +43,7 @@ const fontStyle={
     marginLeft:10
 };
 const liveTracking={
-    backgroundColor:"#fff800"
+    background: "linear-gradient(-151deg, #1e80c5, #63e7b1)"
 };
 const imageAlign={
     marginTop:10,
@@ -65,10 +65,14 @@ const spanStyle={
 const pStyle={
     fontSize:18,
     color:"#fff"
-}
+};
 const textAlignHeader={
     marginTop:120,
     fontWeight:900
+};
+
+const footerStyle={
+    width:"100%"
 };
 
 
@@ -144,6 +148,8 @@ class MainPage extends React.Component{
 
                 </Row>
                 </Container>
+                <br/><br/>
+                <img src={require('../../images/footer.png')}  alt="footer" style={footerStyle}/>
 
             </div>
         )

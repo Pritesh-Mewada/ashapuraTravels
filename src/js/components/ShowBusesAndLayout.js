@@ -16,9 +16,19 @@ const textStyle={
   fontSize:16
 };
 const buttonStyle={
-    background: "linear-gradient(135deg, rgba(255,248,48,1) 0%, rgba(241,90,36,1) 100%)",
+    background: "linear-gradient(-45deg, #0000ff, #ff7bac)",
+};
+const imageService={
+    width:25,
+    height:25,
+    marginRight:10
+
 };
 
+const busStyle={
+    height: 650,
+    overflowY: "auto"
+};
 class ShowBusesAndLayout extends React.Component{
 
     constructor(props){
@@ -27,6 +37,7 @@ class ShowBusesAndLayout extends React.Component{
     }
 
     handleShow(bus) {
+        console.log(bus)
         var layout ={
             BusName:this.props.buses[bus].Name,
             BookingRef:this.props.buses[bus].BookingRef+this.props.route.date,
@@ -52,10 +63,10 @@ class ShowBusesAndLayout extends React.Component{
             <div>
                 <Container>
                     <Row>
-                        <Col md={8}>
+                        <Col md={8} style={busStyle}>
                             {
                                 this.props.showBus.map((bus,index)=>(
-                                    <Paper zDepth={2} key={index} style={{marginTop:5 ,padding:10}}>
+                                    <Paper zDepth={2} key={index} style={{marginBottom:10,padding:10 }}>
                                         <div className="bus">
                                             <div>{bus}</div>
                                             <div>
@@ -66,7 +77,7 @@ class ShowBusesAndLayout extends React.Component{
                                         <div className="Services">
                                             {
                                                 this.props.buses[bus].Services.map((link,index)=>(
-                                                    <img src={link}  alt="Services" className="imageServices"/>
+                                                    <img src={link}  alt="Services" style={imageService}/>
 
                                                 ))
                                             }
@@ -75,14 +86,19 @@ class ShowBusesAndLayout extends React.Component{
                                         <div className="wrapper">
                                             <div>
 
-                                                <img src={require('../../images/single-bed-outline.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.DSSL}</span>
-                                                <img src={require('../../images/single-bed-outline.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.USSL}</span>
-                                                <img src={require('../../images/single-bed-outline.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.SST}</span>
+                                                <img className="imageServices" src={require('../../images/double sleeprxxxhdpi.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.DSSL}</span>
+                                                <img className="imageServices" src={require('../../images/single slprxxxhdpi.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.USSL}</span>
+                                                <img className="imageServices" src={require('../../images/seatxxxhdpi.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.SST}</span>
 
                                             </div>
                                             <div>
-                                                <RaisedButton label="View Seats" buttonStyle={buttonStyle}/>
+                                                <RaisedButton label="View Seats"
+                                                              labelPosition="after"
+                                                              primary={true}
+                                                              onClick={()=>this.handleShow(bus)}
+                                                              buttonStyle={buttonStyle}
 
+                                                />
                                             </div>
                                         </div>
 
@@ -95,8 +111,6 @@ class ShowBusesAndLayout extends React.Component{
                         </Col>
                         <Col md={4}>
                             <SelectLayout/>
-                            <br/>
-                            <RaisedButton  label="Book Selected" onClick={this.bookSelected} primary={true} style={buttonStyle} fullWidth={true}  labelStyle={{ fontSize: 18 }} />
 
                         </Col>
                     </Row>

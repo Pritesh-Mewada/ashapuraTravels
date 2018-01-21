@@ -67,8 +67,18 @@ class CalculateTotalCost extends React.Component{
         )
     }
 }
+const tableHeadStyle={
+    height:50,
+    background: "linear-gradient(-151deg, rgba(30,128,197,0.5), rgba(99,231,177,0.5) )",
 
+};
+const headerStyle={
+    color:"#fff",
+    fontWeight:600,
+    fontSize:18
+};
 class ShowPricesTable extends  React.Component{
+
     constructor(props){
         super(props);
         this.GetHash=this.GetHash.bind(this);
@@ -102,16 +112,15 @@ class ShowPricesTable extends  React.Component{
         this.props.hash(this.state.payment)
     }
     render(){
-        console.log(this.props.user);
         return(
 
                 <div>
                     <Table selectable={false}>
-                        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                        <TableHeader displaySelectAll={false} adjustForCheckbox={false} style={tableHeadStyle} >
                             <TableRow>
-                                <TableHeaderColumn>ID</TableHeaderColumn>
-                                <TableHeaderColumn>Seat</TableHeaderColumn>
-                                <TableHeaderColumn>Price</TableHeaderColumn>
+                                <TableHeaderColumn style={headerStyle}>ID</TableHeaderColumn>
+                                <TableHeaderColumn style={headerStyle}>Seat</TableHeaderColumn>
+                                <TableHeaderColumn style={headerStyle}>Price</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
                         <TableBody displayRowCheckbox={false}>
@@ -129,9 +138,6 @@ class ShowPricesTable extends  React.Component{
                     </Table>
                     <CalculateTotalCost seats={this.props.bucket} price={this.props.price}/>
                     <br/>
-                    <RaisedButton label="Get Hash" secondary={true} fullWidth={true} onClick={this.GetHash} />
-
-                    <RaisedButton label="Proceed to pay" primary={true} fullWidth={true} onClick={this.submitForm} />
                     <form ref="formToSubmit" id="paymentForm" action='https://test.payu.in/_payment' method='post'>
                         <input type="hidden" name="key" value={this.state.payment.key} />
                         <input type="hidden" name="txnid" value={this.state.payment.txnid} />

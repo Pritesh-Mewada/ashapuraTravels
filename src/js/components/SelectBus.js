@@ -11,17 +11,21 @@ import {handleOpenDialog,fetchBuses,NavigateTo} from "../actions/index";
 import {Container ,Row,Col} from 'react-grid-system'
 import * as firebase from 'firebase'
 const backgroundStyle = {
-    backgroundImage:'url(' + require('../../images/bookingMainPage.jpg') + ')',
-    height:175,
-    //background: "linear-gradient(-151deg, #1e80c5, #63e7b1)"
+    backgroundImage:'url(' + require('../../images/select_bg.png') + ')',
+    height:380,
 };
 const selectStyle={
-    color:"#2d2d2d",
+    color:"#fff",
     fontSize:20,
-    paddingLeft:10,
-    paddingRight:10,
+    marginBottom:10
+
 };
 
+const buttonStyle={
+    borderRadius:12,
+    background: "linear-gradient(-15deg, #0000ff, #ff7bac)"
+
+};
 class SelectBus extends React.Component{
     constructor(props){
         super(props);
@@ -44,7 +48,6 @@ class SelectBus extends React.Component{
         var places = firebase.database().ref('Places');
         places.once('value')
             .then((data) => {
-
                 this.setState({
                     places: data.val()
                 });
@@ -71,7 +74,11 @@ class SelectBus extends React.Component{
         var search ={
             from:this.state.places[this.state.from],
             to:this.state.places[this.state.to],
-            date:this.state.date
+            start:this.state.from,
+            end:this.state.to,
+            date:this.state.date,
+            places:this.state.places,
+            dateObject:this.state.dateObject
         };
         if(search.from==null){
             this.props.dialog("Please Select Source")
@@ -92,7 +99,6 @@ class SelectBus extends React.Component{
 
         this.props.search(search);
         this.props.action("/bookingStep");
-
     }
 
     handleToSelect(event,index,value){
@@ -104,57 +110,60 @@ class SelectBus extends React.Component{
     render(){
         return(
             <div style={backgroundStyle}>
-                <Container  >
-                    <Row align="end">
-                        <Col sm={12} md={3} xs={12}>
-                            <SelectField  floatingLabelText="From"
-                                          value={this.state.from}
-                                          onChange={this.handleFromSelect}
-                                          floatingLabelStyle={selectStyle}
-                                          labelStyle={selectStyle}
-
-                            >
-                                {
-                                    this.state.places.map((place, index) => (
-                                        <MenuItem value={index} key={index} primaryText={place}/>
-                                    ))
-                                }
-
-                            </SelectField>
-                        </Col>
-                        <Col sm={12} md={3} xs={12}>
-                            <SelectField  floatingLabelText="To" value={this.state.to}
-                                          onChange={this.handleToSelect}
-                                          floatingLabelStyle={selectStyle}
-                                          labelStyle={selectStyle}
-
-                            >
-                                {
-                                    this.state.places.map((place,index) => (
-                                        <MenuItem value={index} key={index} primaryText={place} />
-                                    ))
-                                }
-                            </SelectField>
-                        </Col>
-                        <Col sm={12} md={3} xs={12} >
-                                <DatePicker hintText="Select Date of Journey" container="inline" onChange={this.handleDate} textFieldStyle={selectStyle} inputStyle={{color: 'white'}}
-                                            maxDate={new Date((new Date()).setDate((new Date().getDate()+15)))} minDate={new Date()}
-                                />
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <div className="busSelect">
+                    <div>
+                        <SelectField  floatingLabelText="From"
+                                      value={this.state.from}
+                                      onChange={this.handleFromSelect}
+                                      floatingLabelStyle={selectStyle}
+                                      labelStyle={selectStyle}
 
 
-                        </Col>
-                        <Col sm={12} md={3} xs={12}>
-                            <RaisedButton label="Search buses"
-                                          labelPosition="after"
-                                          primary={true}
-                                          icon={<Search />}
-                                          onClick={this.searchBuses}
-                            />
+                        >
+                            {
+                                this.state.places.map((place, index) => (
+                                    <MenuItem value={index} key={index} primaryText={place}/>
+                                ))
+                            }
 
-                        </Col>
-                    </Row>
+                        </SelectField>
+                    </div>
+                    <div>
+                        <SelectField  floatingLabelText="To" value={this.state.to}
+                                      onChange={this.handleToSelect}
+                                      floatingLabelStyle={selectStyle}
+                                      labelStyle={selectStyle}
 
-                </Container>
+                        >
+                            {
+                                this.state.places.map((place,index) => (
+                                    <MenuItem value={index} key={index} primaryText={place} />
+                                ))
+                            }
+                        </SelectField>
+                    </div>
+                    <div>
+                        <DatePicker style={{marginBottom:5}} hintText="Select Date of Journey" container="inline" onChange={this.handleDate} textFieldStyle={selectStyle} inputStyle={{color: 'white'}}
+                                    maxDate={new Date((new Date()).setDate((new Date().getDate()+15)))} minDate={new Date()}
+                        />
+                    </div>
+                    <div>
+                        <RaisedButton label="Search buses"
+                                      labelPosition="after"
+                                      primary={true}
+                                      buttonStyle={buttonStyle}
+                                      style={{marginBottom:25,borderRadius:12}}
+                                      icon={<Search />}
+                                      onClick={this.searchBuses}
+                        />
+                    </div>
+                </div>
             </div>
         )
     }

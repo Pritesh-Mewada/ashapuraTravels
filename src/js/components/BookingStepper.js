@@ -1,7 +1,6 @@
 import React from 'react'
 import * as firebase from 'firebase'
 import {Step, Stepper, StepLabel,StepContent} from 'material-ui/Stepper';
-import IconButton from 'material-ui/IconButton'
 import SelectBusBooking from "./SelectBusBooking";
 import ShowBusesAndLayout from "./ShowBusesAndLayout";
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward'
@@ -12,21 +11,14 @@ import { handleOpenDialog,GetUser,OpenProgessDialog,CloseProgressDialog } from '
 import TextField from 'material-ui/TextField'
 import OtpVerification from './OtpVerification'
 import ShowPricesTable from './ShowPricesTable'
+import RaisedButton from 'material-ui/RaisedButton';
 
 const formStyle={
     width:'80%',
     margin:'auto'
 };
-
-const backButton={
-    position:'fixed',
-    top:'50%',
-    left:50
-};
-const forwardButton={
-    position:'fixed',
-    top:'50%',
-    right:50
+const buttonStyle={
+    background: "linear-gradient(-151deg, #1e80c5, #63e7b1)",
 };
 class BookingStepper extends React.Component {
 
@@ -71,6 +63,12 @@ class BookingStepper extends React.Component {
                 Address:this.state.Address
             };
             this.props.StoreData(user);
+
+            this.setState({
+                stepIndex: (this.state.stepIndex+1),
+                finished: this.state.stepIndex >= 2,
+            });
+
         }).catch((error)=>{
             // User couldn't sign in (bad verification code?)
             // ...
@@ -138,7 +136,7 @@ class BookingStepper extends React.Component {
 
 
         const {stepIndex} = this.state;
-        if(stepIndex==0){
+        if(stepIndex==1){
             if(this.state.Email=="" || this.state.Name=="" || this.state.Number=="" || this.state.Address==""){
                 this.props.Dialog("Fill all the details");
                 return
@@ -178,7 +176,17 @@ class BookingStepper extends React.Component {
         switch (stepIndex) {
             case 0:
                 return(
+                    <div>
+                        <SelectBusBooking/>
+                        <ShowBusesAndLayout/>
+                    </div>
+
+                );
+
+            case 1:
+                return(
                     <div style={formStyle}>
+
                         <TextField
                             hintText="Passenger name"
                             floatingLabelText="Name"
@@ -186,6 +194,7 @@ class BookingStepper extends React.Component {
                             fullWidth={true}
                             floatingLabelStyle={{fontSize:18}}
                             onChange={this.handleName}
+
                         />
                         <br/>
                         <TextField
@@ -216,16 +225,10 @@ class BookingStepper extends React.Component {
                         />
                         <br/>
                         <OtpVerification show={this.state.ShowOtp} verifyOtp={this.verifyOtp}/>
-                        <div id="recaptcha-container"></div>
+                        { this.state.ShowOtp ? null : <div id="recaptcha-container"></div> }
+                        <br/><br/><br/>
                     </div>
-                );
 
-            case 1:
-                return(
-                    <div>
-                        <SelectBusBooking/>
-                        <ShowBusesAndLayout/>
-                    </div>
                 );
             case 2:
                 return (
@@ -243,57 +246,71 @@ class BookingStepper extends React.Component {
         const {finished, stepIndex} = this.state;
         const contentStyle = {margin: '0 16px'};
         return (
-            <div style={{width: '100%', maxWidth: 1200, margin: 'auto'}}>
-                <Stepper activeStep={stepIndex}>
-                    <Step>
-                        <StepLabel>Select campaign settings</StepLabel>
-                    </Step>
-                    <Step>
-                        <StepLabel>Create an ad group</StepLabel>
-                    </Step>
-                    <Step>
-                        <StepLabel>Create an ad</StepLabel>
-                    </Step>
-                </Stepper>
-                <div style={contentStyle}>
-                    {finished ? (
-                        <p>
-                            <a
-                                href="#"
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    this.setState({stepIndex: 0, finished: false});
-                                }}
-                            >
-                                Click here
-                            </a> to reset the example.
-                        </p>
-                    ) : (
+            <div>
+                <div style={{width: '100%', maxWidth: 1200, margin: 'auto'}}>
+                    <Stepper activeStep={stepIndex}>
+                        <Step>
+                            <StepLabel>Select Bus & Seats</StepLabel>
+                        </Step>
+                        <Step>
+                            <StepLabel>Insert Details</StepLabel>
+                        </Step>
+                        <Step>
+                            <StepLabel>Payment</StepLabel>
+                        </Step>
+                    </Stepper>
+                    <div style={contentStyle}>
                         <div>
                             <div>{this.getStepContent(stepIndex)}</div>
-                            <div style={{marginTop: 12}}>
-                                <IconButton
-                                    disabled={stepIndex === 0}
-                                    onClick={this.handlePrev}
-                                    style={backButton}
-                                    iconStyle={{width:48,height:48}}
-                                >
-                                    <NavigationArrowBack/>
-                                </IconButton>
-                                <IconButton
-                                    label={stepIndex === 2 ? 'Finish' : 'Next'}
-                                    onClick={this.handleNext}
-                                    style={forwardButton}
-                                    iconStyle={{width:48,height:48}}
-                                >
-                                    <NavigationArrowForward/>
-                                </IconButton>
+                            {/*<div style={{marginTop: 12}}>*/}
+                            {/*<IconButton*/}
+                            {/*disabled={stepIndex === 0}*/}
+                            {/*onClick={this.handlePrev}*/}
+                            {/*style={backButton}*/}
+                            {/*iconStyle={{width:48,height:48}}*/}
+                            {/*>*/}
+                            {/*<NavigationArrowBack/>*/}
+                            {/*</IconButton>*/}
+                            {/*<IconButton*/}
+                            {/*label={stepIndex === 2 ? 'Finish' : 'Next'}*/}
+                            {/*onClick={this.handleNext}*/}
+                            {/*style={forwardButton}*/}
+                            {/*iconStyle={{width:48,height:48}}*/}
+                            {/*>*/}
+                            {/*<NavigationArrowForward/>*/}
+                            {/*</IconButton>*/}
 
+                            {/*</div>*/}
+                            <div style={{display:'flex',justifyContent:"center"}}>
+                                <RaisedButton label="Go Backward"
+                                              labelPosition="after"
+                                              primary={true}
+                                              icon={<NavigationArrowBack/>}
+                                              style={{marginRight:12}}
+                                              buttonStyle={buttonStyle}
+                                              onClick={this.handlePrev}
+                                              disabled={stepIndex==0}
+
+                                />
+                                <RaisedButton label="Proceed forward"
+                                              labelPosition="before"
+                                              primary={true}
+                                              icon={<NavigationArrowForward/>}
+                                              style={{marginLeft:12}}
+                                              buttonStyle={buttonStyle}
+                                              onClick={this.handleNext}
+                                />
                             </div>
+                            <br/><br/><br/>
+
                         </div>
-                    )}
+
+
+                    </div>
                 </div>
+                <img src={require('../../images/footer.png')}  alt="footer" style={{width:"100%"}}/>
             </div>
+
         );
     }
 }

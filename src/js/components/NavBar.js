@@ -12,13 +12,15 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 const imageAlign={
     verticalAlign: "middle",
     marginLeft:20,
-    boxShadow: "0px 6px 12px 0px rgba(0,0,0,0.34)"
+    width:225,
+    height:35,
+
 };
 
 const linkText={
     fontFamily:"Roboto",
     fontSize:16,
-    color:"#2d2d2d",
+    color:"#fff",
     fontWeight:"400"
 };
 const avatarAlign={
@@ -34,8 +36,8 @@ class NavBar extends React.Component{
         return(
             <div className="navbar-fixed">
                 <nav>
-                    <div className="nav-wrapper" style={{backgroundColor:"#fff800"}}>
-                        <img src={require('../../images/logo.jpg')}  alt="logo" style={imageAlign}/>
+                    <div className="nav-wrapper" style={{background: "linear-gradient(-151deg, #1e80c5, #63e7b1)"}}>
+                        <img src={require('../../images/logo.png')}  alt="logo" style={imageAlign}/>
                         <ul id="nav-mobile" className="right hide-on-med-and-down">
                             <li><NavLink to="/" style={linkText}>HOME</NavLink></li>
                             <li><NavLink to="/" style={linkText}>PNR</NavLink></li>

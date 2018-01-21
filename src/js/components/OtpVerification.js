@@ -1,6 +1,4 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux';
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -32,14 +30,12 @@ class OtpVerification extends React.Component{
                         floatingLabelStyle={{fontSize:18}}
                         onChange={this.handleOtp}
                     />
-
-                    <RaisedButton label="Primary" primary={true} onClick={()=>this.props.verifyOtp(this.state.Number)} style={{marginLeft:10}}/>
-
+                    <RaisedButton label="Verify" primary={true} onClick={()=>this.props.verifyOtp(this.state.Number)} style={{marginLeft:10}}/>
                 </div>
             )
         }else{
             return(
-                <div></div>
+                <div ></div>
             )
         }
 

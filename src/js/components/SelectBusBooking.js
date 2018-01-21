@@ -19,8 +19,7 @@ const backgroundStyle = {
 };
 
 const buttonStyle={
-    background: "linear-gradient(135deg, rgba(255,248,48,1) 0%, rgba(241,90,36,1) 100%)",
-
+    background: "linear-gradient(-45deg, #0000ff, #ff7bac)",
 };
 const paperStyle={
     paddingBottom:2,
@@ -35,11 +34,19 @@ const selectStyle={
 class SelectBus extends React.Component{
     constructor(props){
         super(props);
+        // this.state ={
+        //     places:this.props.route.places,
+        //     from:this.props.route.start,
+        //     to:this.props.route.end,
+        //     date:this.props.route.dateObject
+        //
+        // };
+
         this.state ={
             places:[],
-            from:null,
-            to:null,
-            date:null
+            from:0,
+            to:1,
+            date:new Date()
 
         };
 
@@ -54,7 +61,6 @@ class SelectBus extends React.Component{
         var places = firebase.database().ref('Places');
         places.once('value')
             .then((data) => {
-
                 this.setState({
                     places: data.val()
                 });
@@ -62,6 +68,8 @@ class SelectBus extends React.Component{
 
         this.props.get();
     }
+
+
 
     handleFromSelect(event,index,value){
         this.setState({
@@ -101,8 +109,6 @@ class SelectBus extends React.Component{
         }
 
         this.props.search(search);
-        this.props.action("/bookingStep");
-
     }
 
     handleToSelect(event,index,value){
@@ -124,7 +130,7 @@ class SelectBus extends React.Component{
                                               floatingLabelStyle={selectStyle}
                                               labelStyle={selectStyle}
                                               iconStyle={{fill:"#2d2d2d"}}
-                                              underlineStyle={{fill:"#2d2d2d",borderColor:"#fff830",borderBottomWidth:"2px"}}
+                                              underlineStyle={{fill:"#1e80c5",borderColor:"#53e7b1",borderBottomWidth:"2px"}}
 
                                 >
                                     {
@@ -141,7 +147,7 @@ class SelectBus extends React.Component{
                                               floatingLabelStyle={selectStyle}
                                               labelStyle={selectStyle}
                                               iconStyle={{fill:"#2d2d2d"}}
-                                              underlineStyle={{fill:"#2d2d2d",borderColor:"#fff830",borderBottomWidth:"2px"}}
+                                              underlineStyle={{fill:"#2d2d2d",borderColor:"#53e7b1",borderBottomWidth:"2px"}}
 
                                 >
                                     {
@@ -154,7 +160,7 @@ class SelectBus extends React.Component{
                             <Col sm={12} md={3} xs={12} >
                                 <DatePicker hintText="Select Date of Journey" container="inline" onChange={this.handleDate} textFieldStyle={selectStyle} inputStyle={{color: "#2d2d2d",hintColor:"#2d2d2d"}}
                                             maxDate={new Date((new Date()).setDate((new Date().getDate()+15)))} minDate={new Date()}
-                                            style={{marginBottom:5}}
+                                            style={{marginBottom:5}} defaultDate={new Date(this.state.date)}
                                 />
 
 
@@ -192,7 +198,7 @@ function matchDispatchToProps(dispatch){
 }
 const mapStateToProps = (state)=> {
     return {
-        route:state.sleeper
+        route:state.sleeper.Route
     };
 };
 
