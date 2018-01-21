@@ -1,0 +1,73 @@
+.bus{
+    display: flex;
+    flex-direction:row;
+}
+.bus >div{
+    flex-grow: 1;
+}
+
+.bus >div:nth-child(1){
+    width: 200px;
+}
+
+
+.wrapper{
+    display: flex;
+    flex-direction:row;
+}
+
+.wrapper>div:nth-child(1){
+    flex-grow: 2;
+}
+
+.totalPrice{
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    font-size: 18px;
+    font-family: Roboto;
+    font-weight: 600;
+    padding: 5px;
+    border: 2px solid #fff800;
+}
+
+
+.bus >div:nth-child(1){
+    flex-grow: 1;
+    font-size: 2em;
+    font-family: Roboto;
+}
+
+.bus >div:nth-child(2){
+    flex-grow: 1;
+    font-size: 18px;
+    font-family: Roboto;
+}
+
+.Services >img{
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+}
+
+.price{
+    font-size: 18px;
+    font-weight: 600;
+    font-family: Roboto;
+    margin-left: 10px;
+    margin-right: 10px;
+    position: relative;
+    top:-10px;
+}
+
+.imageServices{
+    margin-right: 10px;
+}
+
+input[type="text"]:not(.browser-default):focus:not([readonly]){
+    box-shadow: none;
+}
+
+
+
+
