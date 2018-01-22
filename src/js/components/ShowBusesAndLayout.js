@@ -33,29 +33,17 @@ class ShowBusesAndLayout extends React.Component{
 
     constructor(props){
         super(props);
-        this.bookSelected =this.bookSelected.bind(this);
     }
 
     handleShow(bus) {
-        console.log(bus)
         var layout ={
             BusName:this.props.buses[bus].Name,
-            BookingRef:this.props.buses[bus].BookingRef+this.props.route.date,
+            BookingRef:this.props.buses[bus].BookingRef+this.props.route.date.getDate()+"-"+(this.props.route.date.getMonth()+1)+"-"+this.props.route.date.getFullYear(),
             DateStamp:this.props.route.date,
             Pricing:this.props.buses[bus].Prices,
             LayoutName:this.props.buses[bus].Layout
         };
         this.props.showLayout(layout);
-    }
-
-    bookSelected(){
-        var parameters={
-            BookingRef:this.props.busLayout.BookingRef,
-            Seats:this.props.seats
-        };
-
-
-        this.props.bookAll(parameters);
     }
 
     render(){
@@ -127,7 +115,7 @@ class ShowBusesAndLayout extends React.Component{
 function matchDispatchToProps(dispatch){
     const actions={
         showLayout:showBusLayout,
-        bookAll:BookSelected
+
     };
     return bindActionCreators(actions, dispatch);
 }

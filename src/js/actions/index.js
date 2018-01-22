@@ -101,7 +101,7 @@ const GetHash=(data)=>{
 
     };
     return (dispatch)=>{
-      return Axios.post('http://localhost:5000/gethash',post).then(response=>{
+      return Axios.post('https://ashapura-travels-8bfb5.firebaseapp.com/gethash',post).then(response=>{
           dispatch(Storehash(response.data))
       }).catch(error=>{
           throw error

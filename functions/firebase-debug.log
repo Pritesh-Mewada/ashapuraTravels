@@ -1,0 +1,33 @@
+[debug] [2018-01-22T06:35:00.751Z] ----------------------------------------------------------------------
+[debug] [2018-01-22T06:35:00.757Z] Command:       /home/pritesh/.nvm/versions/node/v6.11.5/bin/node /home/pritesh/.nvm/versions/node/v6.11.5/bin/firebase serve
+[debug] [2018-01-22T06:35:00.758Z] CLI Version:   3.17.3
+[debug] [2018-01-22T06:35:00.758Z] Platform:      linux
+[debug] [2018-01-22T06:35:00.758Z] Node Version:  v6.11.5
+[debug] [2018-01-22T06:35:00.758Z] Time:          Mon Jan 22 2018 12:05:00 GMT+0530 (IST)
+[debug] [2018-01-22T06:35:00.758Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-01-22T06:35:00.836Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-01-22T06:35:00.836Z] > authorizing via signed-in user
+[debug] [2018-01-22T06:35:00.842Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ashapura-travels-8bfb5  
+  
+ Mon Jan 22 2018 12:05:00 GMT+0530 (IST)
+[debug] [2018-01-22T06:35:02.330Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-22T06:35:02.332Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/ashapura-travels-8bfb5/tokens  
+  
+ Mon Jan 22 2018 12:05:02 GMT+0530 (IST)
+[debug] [2018-01-22T06:35:18.330Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/pritesh/Documents/React js/ashapura-travels'...
+[info] 
+[debug] [2018-01-22T06:35:18.340Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/ashapura-travels-8bfb5  
+  
+ Mon Jan 22 2018 12:05:18 GMT+0530 (IST)
+[debug] [2018-01-22T06:35:24.983Z] <<< HTTP RESPONSE 200
+[debug] [2018-01-22T06:35:24.984Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/24479807923/clients/_:getWebAppConfig  
+  
+ Mon Jan 22 2018 12:05:24 GMT+0530 (IST)
+[debug] [2018-01-22T06:35:25.697Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: build
+[info] ✔  hosting: Local server: http://localhost:5000
+
+[info] [hosting] Rewriting /success to live function app

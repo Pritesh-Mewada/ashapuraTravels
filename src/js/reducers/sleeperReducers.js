@@ -2,7 +2,7 @@
 
 const seats={
     Seats:{},
-    userBucket:["U1DSL","U2DSL"],
+    userBucket:[],
     Buses:{},
     searchedBus:[],
     busLayout:{
@@ -21,6 +21,19 @@ const seats={
         address:"Ghartan pada no 2",
         number:"8097394573",
         mail:"mewadapritesh5@gmail.com"
+    },
+    payment:{
+        key:"gtKFFx",
+        txnid:"ashapura"+Math.abs(Math.random()*10000000),
+        amount:2,
+        productinfo:"productinfo",
+        firstname:"priteshname",
+        email:"mewadapritesh5@gmail.com",
+        surl:"heydemo",
+        furl:"heydemo",
+        phone:"9172977934",
+        udf1:"ello",
+        service_provider:"payu_paisa"
     }
 
 };
@@ -41,8 +54,6 @@ export default (state = seats, action) => {
                 prevSeats[action.seat] = {isHold:true};
                 prevBucket.push(action.seat);
             }
-
-            console.log(state);
             return Object.assign({},state,{
                 userBucket:prevBucket,
                 Seats:prevSeats
@@ -62,7 +73,6 @@ export default (state = seats, action) => {
                     searchedBus.push(a)
                 }
             }
-
             return Object.assign({},state,{
                 searchedBus:searchedBus,
                 Route:action.criteria
@@ -74,8 +84,15 @@ export default (state = seats, action) => {
             break;
 
         case 'STORE_USER':
+            var payment = state.payment;
+            payment.firstname = action.data.Name;
+            payment.email=action.data.Email;
+            payment.phone=action.data.Number;
+            payment.productinfo = state.userBucket.toString();
+            payment.udf1=state.busLayout.BookingRef;
             return Object.assign({},state,{
-                user:action.data
+                user:action.data,
+                payment:payment
             });
         break;
 

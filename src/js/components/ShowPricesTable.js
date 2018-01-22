@@ -82,36 +82,20 @@ class ShowPricesTable extends  React.Component{
     constructor(props){
         super(props);
         this.GetHash=this.GetHash.bind(this);
-        this.submitForm=this.submitForm.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
-        this.state ={
-            payment:{
-                key:"gtKFFx",
-                txnid:"priteshtxid"+Math.abs(Math.random()*10000),
-                amount:2,
-                productinfo:"productinfo",
-                firstname:"priteshname",
-                email:"mewadapritesh5@gmail.com",
-                surl:"heydemo",
-                furl:"heydemo",
-                phone:"9172977934",
-                udf1:"ello",
-                service_provider:"payu_paisa"
-            }
 
-        }
     }
-    submitForm(){
-        this.refs.formToSubmit.submit();
-    }
+
     handleSubmit(e){
         e.preventDefault();
     }
-    GetHash(){
 
-        this.props.hash(this.state.payment)
+
+    GetHash(){
+        this.props.hash(this.props.payment)
     }
     render(){
+        this.GetHash();
         return(
 
                 <div>
@@ -136,22 +120,11 @@ class ShowPricesTable extends  React.Component{
                             }
                         </TableBody>
                     </Table>
+
+                    {/*<RaisedButton primary={true} onClick={this.GetHash} label="gethash"/>*/}
+
                     <CalculateTotalCost seats={this.props.bucket} price={this.props.price}/>
                     <br/>
-                    <form ref="formToSubmit" id="paymentForm" action='https://test.payu.in/_payment' method='post'>
-                        <input type="hidden" name="key" value={this.state.payment.key} />
-                        <input type="hidden" name="txnid" value={this.state.payment.txnid} />
-                        <input type="hidden" name="amount" value={this.state.payment.amount} />
-                        <input type="hidden" name="productinfo" value={this.state.payment.productinfo} />
-                        <input type="hidden" name="firstname" value={this.state.payment.firstname} />
-                        <input type="hidden" name="udf1" value={this.state.payment.udf1} />
-                        <input type="hidden" name="email" value={this.state.payment.email} />
-                        <input type="hidden" name="phone" value={this.state.payment.phone} />
-                        <input type="hidden" name="lastname" value={this.state.payment.firstname} />
-                        <input type="hidden" name="surl" value="https://ashapura-travels-8bfb5.firebaseapp.com/success" />
-                        <input type="hidden" name="furl" value="https://ashapura-travels-8bfb5.firebaseapp.com/failure" />
-                        <input type="hidden" name="hash" id="hash" value={this.props.hashvalue}/>
-                    </form>
                 </div>
 
         )
@@ -164,7 +137,7 @@ const mapStateToProps = (state)=> {
         bucket:state.sleeper.userBucket,
         price:state.sleeper.busLayout.Pricing,
         user:state.sleeper.user,
-        hashvalue:state.sleeper.hash
+        payment:state.sleeper.payment
     };
 };
 

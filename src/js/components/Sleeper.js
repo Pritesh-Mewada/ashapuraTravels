@@ -66,6 +66,8 @@ class Sleeper extends  React.Component{
         if(this.props.BookingRef){
             var sleeper = firebase.database().ref('Bookings/'+this.props.BookingRef+"/"+this.props.id);
             sleeper.on('value',(data)=>{
+                console.log(this.props.id);
+                console.log(data.val());
                 if(data.val() !=null){
                     var getdate = new Date(data.val().isHold);
                     var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);

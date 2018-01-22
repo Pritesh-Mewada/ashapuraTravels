@@ -7,7 +7,7 @@ import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forwa
 import  NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import { handleOpenDialog,GetUser,OpenProgessDialog,CloseProgressDialog } from '../actions/index'
+import { handleOpenDialog,GetUser,OpenProgessDialog,CloseProgressDialog,BookSelected } from '../actions/index'
 import TextField from 'material-ui/TextField'
 import OtpVerification from './OtpVerification'
 import ShowPricesTable from './ShowPricesTable'
@@ -26,13 +26,14 @@ class BookingStepper extends React.Component {
         super();
         this.state = {
             finished: false,
-            stepIndex: 2,
+            stepIndex: 0,
             Name:"",
             Address:"",
             Number:"",
             Email:"",
             ShowOtp:false,
-            OtpVerified:false
+            OtpVerified:false,
+
         };
 
         this.handleNumber=this.handleNumber.bind(this);
@@ -43,11 +44,21 @@ class BookingStepper extends React.Component {
         this.handleNext=this.handleNext.bind(this);
         this.handlePrev=this.handlePrev.bind(this);
         this.sendOTP=this.sendOTP.bind(this);
-        this.verifyOtp=this.verifyOtp.bind(this)
-
+        this.verifyOtp=this.verifyOtp.bind(this);
+        this.submitForm=this.submitForm.bind(this);
+        this.bookSelected=this.bookSelected.bind(this)
 
     }
-
+    bookSelected(){
+        var parameters={
+            BookingRef:this.props.bookingRef,
+            Seats:this.props.bucket
+        };
+        this.props.bookAll(parameters);
+    }
+    submitForm(){
+        this.refs.formToSubmit.submit();
+    }
     verifyOtp(code){
         this.props.ProgressOpen("Verifying otp please wait");
         window.confirmationResult.confirm(code).then((result)=> {
@@ -136,6 +147,10 @@ class BookingStepper extends React.Component {
 
 
         const {stepIndex} = this.state;
+
+        if(stepIndex==0){
+            this.bookSelected();
+        }
         if(stepIndex==1){
             if(this.state.Email=="" || this.state.Name=="" || this.state.Number=="" || this.state.Address==""){
                 this.props.Dialog("Fill all the details");
@@ -156,6 +171,10 @@ class BookingStepper extends React.Component {
                 return
             }
 
+        }
+
+        if(stepIndex==2){
+            this.submitForm()
         }
 
         this.setState({
@@ -234,6 +253,20 @@ class BookingStepper extends React.Component {
                 return (
                     <span>
                         <ShowPricesTable/>
+                        <form ref="formToSubmit" id="paymentForm" action='https://test.payu.in/_payment' method='post'>
+                            <input type="hidden" name="key" value={this.props.payment.key} />
+                            <input type="hidden" name="txnid" value={this.props.payment.txnid} />
+                            <input type="hidden" name="amount" value={this.props.payment.amount} />
+                            <input type="hidden" name="productinfo" value={this.props.payment.productinfo} />
+                            <input type="hidden" name="firstname" value={this.props.payment.firstname} />
+                            <input type="hidden" name="udf1" value={this.props.payment.udf1} />
+                            <input type="hidden" name="email" value={this.props.payment.email} />
+                            <input type="hidden" name="phone" value={this.props.payment.phone} />
+                            <input type="hidden" name="lastname" value={this.props.payment.firstname} />
+                            <input type="hidden" name="surl" value="https://ashapura-travels-8bfb5.firebaseapp.com/success" />
+                            <input type="hidden" name="furl" value="https://ashapura-travels-8bfb5.firebaseapp.com/failure" />
+                            <input type="hidden" name="hash" id="hash" value={this.props.hashvalue}/>
+                        </form>
                     </span>
                 );
 
@@ -319,7 +352,10 @@ const mapStateToProps = (state)=> {
     return {
         user:state.sleeper.user,
         bucket:state.sleeper.userBucket,
-        price:state.sleeper.busLayout.Pricing
+        price:state.sleeper.busLayout.Pricing,
+        bookingRef:state.sleeper.busLayout.BookingRef,
+        hashvalue:state.sleeper.hash,
+        payment:state.sleeper.payment
     };
 };
 
@@ -330,7 +366,8 @@ function matchDispatchToProps(dispatch){
         Dialog:handleOpenDialog,
         ProgressOpen:OpenProgessDialog,
         ProgressClose:CloseProgressDialog,
-        StoreData:GetUser
+        StoreData:GetUser,
+        bookAll:BookSelected
     };
     return bindActionCreators(actions, dispatch);
 }
