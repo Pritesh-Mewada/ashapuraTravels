@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import * as firebase from 'firebase'
 
 const seatStyle={
@@ -72,7 +71,7 @@ class Seat extends  React.Component{
                 if(data.val() !=null){
                     var getdate = new Date(data.val().isHold);
                     var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
-                    if(data.val().isBooked && data.val().isBooked==true){
+                    if(data.val().isBooked && data.val().isBooked===true){
                         this.setState({
                             isBooked:true
                         })
@@ -113,7 +112,7 @@ class Seat extends  React.Component{
         }
 
 
-        if(this.props.status && this.props.status[this.props.id]  &&  this.props.status[this.props.id].isHold==true){
+        if(this.props.status && this.props.status[this.props.id]  &&  this.props.status[this.props.id].isHold===true){
             style=seatStyleSelected
         }
 

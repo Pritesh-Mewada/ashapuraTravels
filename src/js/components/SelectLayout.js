@@ -1,14 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import Rangeela from './Rangeela'
-import Raksha from './Raksha'
-import Hemani from './Hemani'
+import Rangeela from './buses/Rangeela'
+import Raksha from './buses/Raksha'
+import Hemani from './buses/Hemani'
 import Paper from 'material-ui/Paper';
 class SelectLayout extends React.Component{
-    constructor(props){
-        super(props)
-    }
 
     render(){
         switch (this.props.busLayout.LayoutName){
@@ -21,11 +18,16 @@ class SelectLayout extends React.Component{
                 );
             case "hemanitype1" :
                 return(
-                    <Hemani/>
+                    <Paper zDepth={2}>
+                        <Hemani/>
+                    </Paper>
+
                 );
             case "rakshatype1" :
                 return(
-                    <Raksha/>
+                    <Paper zDepth={2}>
+                        <Raksha/>
+                    </Paper>
                 );
             default:
                 <h1>Please Select a bus</h1>

@@ -19,9 +19,9 @@ const imageAlign={
 
 const linkText={
     fontFamily:"Roboto",
-    fontSize:16,
+    fontSize:15,
     color:"#fff",
-    fontWeight:"400"
+    fontWeight:600
 };
 const avatarAlign={
     marginTop:12,
@@ -29,9 +29,6 @@ const avatarAlign={
 };
 
 class NavBar extends React.Component{
-    constructor(props){
-        super(props)
-    }
     render(){
         return(
             <div className="navbar-fixed">

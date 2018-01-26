@@ -24,14 +24,12 @@ const handleCloseDialog=()=>{
         type:'CLOSE_DIALOG'
     }
 };
-
 const GetUser=(user)=>{
     return{
         type:'STORE_USER',
         data:user
     }
 };
-
 const OpenProgessDialog=(data)=>{
     return{
         type:'OPEN_DIALOG_PROGRESS',
@@ -43,28 +41,12 @@ const CloseProgressDialog=()=>{
         type:'CLOSE_DIALOG_PROGRESS'
     }
 };
-
-const fetchBuses = () => {
-    return (dispatch) => {
-        var buses = firebase.database().ref('Buses');
-        return buses.once('value')
-            .then((data) => {
-                dispatch(GetBuses(data.val()))
-            });
-    };
-};
-
-
-
 const searchBuses =(data)=>{
     return{
         type:'SELECT_BUS',
         criteria:data
     }
 };
-
-
-
 const showBusLayout =(data)=>{
     return{
         type:'SHOW_LAYOUT',
@@ -74,11 +56,12 @@ const showBusLayout =(data)=>{
 
 const temp =()=>{
     return{
-        type:'temp'
+        type:'ACTION_DONE'
     }
 };
 
 const NavigateTo=(location)=>{
+    // check all the required credentials before navigating
     return (dispatch) => {
         dispatch(routerActions.push(location));
     }
@@ -93,7 +76,9 @@ const Storehash=(hash)=>{
 };
 
 
+// async calls
 const GetHash=(data)=>{
+    //dont send the amount let the server to calculate it
     var preHashString =  data.key + '|' + data.txnid + '|' + data.amount + '|' + data.productinfo + '|' + data.firstname + '|' + data.email + '|' + data.udf1 + '||||||||||';
     console.log(preHashString);
     var post ={
@@ -109,6 +94,83 @@ const GetHash=(data)=>{
   }
 };
 
+const fetchBuses = () => {
+    return (dispatch) => {
+        var buses = firebase.database().ref('Buses');
+        return buses.on('value',(data)=>{
+            dispatch(GetBuses(data.val()))
+        })
+
+    };
+};
+
+
+const AgentLogin=(email,password)=>{
+    return (dispatch) => {
+        var signIn = firebase.auth();
+        dispatch(OpenProgessDialog("Verifying agent"));
+        return signIn.signInWithEmailAndPassword(email, password).then((response)=>{
+            dispatch(CloseProgressDialog());
+        }).catch(error=>{
+            dispatch(CloseProgressDialog())
+            dispatch(handleOpenDialog("Error wrong credentials"));
+        });
+    };
+};
+
+
+const BookSlot=(data)=>{
+//check if the seat is available or not
+    return (dispatch) => {
+        var slot = firebase.database().ref('Buses/'+data.bus+'/Prices/Slots');
+        return slot.push().set({
+            from:data.from,
+            to:data.to,
+            SSL:data.ssl,
+            SST:data.sst
+        }).then(()=>{
+            dispatch(temp())
+        })
+    };
+};
+
+const BlockBus=(datesArrayObject)=>{
+//check if the seat is available or not
+    return (dispatch) => {
+        var slot = firebase.database().ref('Buses').child(datesArrayObject.bus).child('Availability');
+        return slot.once('value').then((data)=>{
+            var dataDates =data.val();
+            if(!dataDates){
+                dataDates=[];
+            }
+            dataDates=dataDates.concat(datesArrayObject.dates);
+
+            return slot.set(dataDates)
+        }).then(()=>{
+            dispatch(temp());
+        })
+    };
+};
+
+
+const CancelBlock=(Block)=>{
+    return (dispatch) => {
+        var slot = firebase.database().ref('Buses').child(Block.bus).child("Prices").child("Slots").child(Block.id);
+        return slot.set(null).then(()=>{
+            dispatch(temp());
+        })
+    };
+}
+
+
+const CancelBlockDate=(Block)=>{
+    return (dispatch) => {
+        var slot = firebase.database().ref('Buses').child(Block.bus).child("Availability");
+        return slot.set(Block.dates).then(()=>{
+            dispatch(temp());
+        })
+    };
+}
 
 const BookSelected=(seatsAvailable)=>{
 //check if the seat is available or not
@@ -151,4 +213,4 @@ const BookSelected=(seatsAvailable)=>{
 };
 
 
-export {GetHash,GetUser,NavigateTo,BookSelected,showBusLayout,sleeperClicked,OpenProgessDialog,CloseProgressDialog,GetBuses,handleOpenDialog,handleCloseDialog,fetchBuses,searchBuses}
+export {AgentLogin,CancelBlockDate,CancelBlock,GetHash,GetUser,NavigateTo,BlockBus,BookSelected,showBusLayout,sleeperClicked,OpenProgessDialog,CloseProgressDialog,GetBuses,handleOpenDialog,handleCloseDialog,fetchBuses,searchBuses,BookSlot}

@@ -66,13 +66,11 @@ class Sleeper extends  React.Component{
         if(this.props.BookingRef){
             var sleeper = firebase.database().ref('Bookings/'+this.props.BookingRef+"/"+this.props.id);
             sleeper.on('value',(data)=>{
-                console.log(this.props.id);
-                console.log(data.val());
                 if(data.val() !=null){
                     var getdate = new Date(data.val().isHold);
                     var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
 
-                    if(data.val().isBooked && data.val().isBooked==true){
+                    if(data.val().isBooked && data.val().isBooked===true){
                         this.setState({
                             isBooked:true
                         })
@@ -114,7 +112,7 @@ class Sleeper extends  React.Component{
             style=sleepStyleHover
         }
 
-        if(this.props.status && this.props.status[this.props.id]  &&  this.props.status[this.props.id].isHold==true){
+        if(this.props.status && this.props.status[this.props.id]  &&  this.props.status[this.props.id].isHold===true){
             style=sleepStyleSelected
         }
 

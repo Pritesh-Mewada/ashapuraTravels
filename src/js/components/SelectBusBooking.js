@@ -103,7 +103,7 @@ class SelectBus extends React.Component{
             this.props.dialog("Please Select Date")
             return;
         }
-        if(search.from==search.to){
+        if(search.from===search.to){
             this.props.dialog("Source and Destination Cannot be same");
             return;
         }

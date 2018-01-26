@@ -5,10 +5,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import NavBar from './NavBar'
 import Main from './Main'
 import ProgressDialogue from './ProgressDialogue'
-
-//require('../../css/style.css');
-
-
+import LoginAgent from '../components/AgentComponents/LoginAgent'
+import AgentTabs from '../components/AgentComponents/AgentTabs'
 const muiTheme = getMuiTheme({
     raisedButton: {
         fontSize:14,
@@ -17,11 +15,6 @@ const muiTheme = getMuiTheme({
 
 
 class App extends React.Component{
-    constructor(){
-        super();
-
-    }
-
     render(){
         return(
             <div>
@@ -30,13 +23,17 @@ class App extends React.Component{
                         <AlertDialogue/>
                         <NavBar/>
                         <Main/>
+
+                        {/*<LoginAgent/>*/}
+
+                        {/*<AgentTabs/>*/}
+
                         <ProgressDialogue/>
                     </div>
                 </MuiThemeProvider>
             </div>
         )
     }
-
 }
 
 export default App

@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import sleeperReducer from './sleeperReducers'
-import defaultSeats from './defaultSeats'
 import alertDialogueReducer from './alertDialogueReducer'
 import progressDialogueReducer from './progressDialogueReducer'
 /*

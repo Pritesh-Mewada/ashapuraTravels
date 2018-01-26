@@ -5,7 +5,7 @@ import {Container ,Row,Col} from 'react-grid-system'
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
 import FontIcon from 'material-ui/FontIcon';
-import {showBusLayout,BookSelected} from '../actions/index'
+import {showBusLayout} from '../actions/index'
 import SelectLayout from './SelectLayout'
 const iconArrow = {
     fontSize:28,
@@ -30,15 +30,10 @@ const busStyle={
     overflowY: "auto"
 };
 class ShowBusesAndLayout extends React.Component{
-
-    constructor(props){
-        super(props);
-    }
-
     handleShow(bus) {
         var layout ={
             BusName:this.props.buses[bus].Name,
-            BookingRef:this.props.buses[bus].BookingRef+this.props.route.date.getDate()+"-"+(this.props.route.date.getMonth()+1)+"-"+this.props.route.date.getFullYear(),
+            BookingRef:this.props.buses[bus].BookingRef+this.props.route.date,
             DateStamp:this.props.route.date,
             Pricing:this.props.buses[bus].Prices,
             LayoutName:this.props.buses[bus].Layout
@@ -65,7 +60,7 @@ class ShowBusesAndLayout extends React.Component{
                                         <div className="Services">
                                             {
                                                 this.props.buses[bus].Services.map((link,index)=>(
-                                                    <img src={link}  alt="Services" style={imageService}/>
+                                                    <img src={link} key={index} alt="Services" style={imageService}/>
 
                                                 ))
                                             }

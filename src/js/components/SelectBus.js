@@ -8,24 +8,37 @@ import Search from 'material-ui/svg-icons/action/search';
 import DatePicker from 'material-ui/DatePicker'
 import {searchBuses} from '../actions/index'
 import {handleOpenDialog,fetchBuses,NavigateTo} from "../actions/index";
-import {Container ,Row,Col} from 'react-grid-system'
+import IconButton from 'material-ui/IconButton';
+import ActionHome from 'material-ui/svg-icons/action/home';
 import * as firebase from 'firebase'
 const backgroundStyle = {
-    backgroundImage:'url(' + require('../../images/select_bg.png') + ')',
-    height:380,
+    backgroundImage:'url(' + require('../../images/select_bg.png') + '), linear-gradient(45deg, #63e7b1, #1e80c5)' ,
+    height:500,
+    backgroundRepeat:"no-repeat",
+
 };
 const selectStyle={
     color:"#fff",
     fontSize:20,
-    marginBottom:10
+    marginBottom:5
 
 };
 
 const buttonStyle={
     borderRadius:12,
     background: "linear-gradient(-15deg, #0000ff, #ff7bac)"
-
 };
+const calenderStyle={
+    marginLeft:40,
+    marginBottom:8,
+    marginRight:20,
+    position: "relative",
+    top: -7,
+    fontSize: 21,
+    color:"#eee",
+    fontFamily:"Roboto",
+    fontWeight:500
+}
 class SelectBus extends React.Component{
     constructor(props){
         super(props);
@@ -33,7 +46,7 @@ class SelectBus extends React.Component{
             places:[],
             from:null,
             to:null,
-            date:null
+            date:"Select Date"
 
         };
 
@@ -63,7 +76,7 @@ class SelectBus extends React.Component{
     }
 
     handleDate(event,date){
-        var formattedDate = date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+        var formattedDate = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
         this.setState({
             date:formattedDate,
             dateObject:date
@@ -92,7 +105,7 @@ class SelectBus extends React.Component{
             this.props.dialog("Please Select Date")
             return;
         }
-        if(search.from==search.to){
+        if(search.from===search.to){
             this.props.dialog("Source and Destination Cannot be same");
             return;
         }
@@ -105,6 +118,9 @@ class SelectBus extends React.Component{
         this.setState({
             to:value
         })
+    }
+    openDatePicker=()=>{
+        this.refs.dp.openDialog()
     }
 
     render(){
@@ -148,17 +164,21 @@ class SelectBus extends React.Component{
                             }
                         </SelectField>
                     </div>
-                    <div>
-                        <DatePicker style={{marginBottom:5}} hintText="Select Date of Journey" container="inline" onChange={this.handleDate} textFieldStyle={selectStyle} inputStyle={{color: 'white'}}
+                    <div style={{textAlign:"left",marginBottom:8}}>
+                        <DatePicker  style={{visibility:"hidden"}} hintText="Select Date of Journey" container="inline" onChange={this.handleDate} textFieldStyle={selectStyle} inputStyle={{color: 'white'}}
                                     maxDate={new Date((new Date()).setDate((new Date().getDate()+15)))} minDate={new Date()}
+                                    ref='dp'
                         />
+                        <span style={calenderStyle}>{this.state.date}</span>
+                        <img src={require('../../images/calander.png')}  alt="calendar_logo" onClick={this.openDatePicker} />
+
                     </div>
                     <div>
                         <RaisedButton label="Search buses"
                                       labelPosition="after"
                                       primary={true}
                                       buttonStyle={buttonStyle}
-                                      style={{marginBottom:25,borderRadius:12}}
+                                      style={{marginBottom:13,borderRadius:21}}
                                       icon={<Search />}
                                       onClick={this.searchBuses}
                         />

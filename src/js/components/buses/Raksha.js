@@ -1,14 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import Sleeper from "./Sleeper"
-import DoubleSleeper from "./DoubleSleeper"
-import DoubleSeats from "./DoubleSeats"
-import Seat from './Seat'
+import Sleeper from "../Sleeper"
+import DoubleSleeper from "../DoubleSleeper"
+import DoubleSeats from "../DoubleSeats"
 import {Tabs,Tab} from 'material-ui/Tabs'
-import {sleeperClicked} from "../actions/index";
+import {sleeperClicked} from "../../actions/index";
 const containerWidth={
-    width:205,
+    width:250,
     margin:"auto",
 };
 const TopBus={
@@ -18,39 +17,21 @@ const TopBus={
 };
 const TopBusMid={
     float :"left",
-    marginLeft:"55px",
+    marginLeft:"100px",
     marginTop:'5px',
 
 };
 const TopBusMidTop={
     float :"left",
-    marginLeft:"55px",
+    marginLeft:"100px",
     marginTop:'5px',
-};
-
-const backSeats ={
-    display:'inline-block',
-};
-const backSeatsOne={
-    display:'inline-block',
-    marginLeft:8
-}
-const backSeatsAlignment={
 };
 const tabsStyle={
     //DEFINE YOUR TAB BUTTON STYLE HERE
     backgroundColor:"#2e3192",
 };
+class Raksha extends React.Component{
 
-
-class Hemani extends React.Component{
-    constructor(props){
-        super(props)
-    }
-
-    componentDidMount(){
-
-    }
 
     render(){
         return(
@@ -88,20 +69,12 @@ class Hemani extends React.Component{
                             <div style={TopBusMid}>
                                 <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["D13DSL","D14DSL"]}/>
                                 <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["D15DSL","D16DSL"]}/>
+                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["D17DSL","D18DSL"]}/>
                                 <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D1SST","D2SST"]} />
                                 <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D3SST","D4SST"]} />
                                 <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D3SST","D4SST"]} />
                                 <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D3SST","D4SST"]} />
                             </div>
-                            <div style={backSeatsAlignment}>
-                                <div style={backSeatsOne}>
-                                    <Seat book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={"Give"}/>
-                                </div>
-                                <div style={backSeats}>
-                                    <DoubleSeats book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D5SST","D6SST"]} />
-                                </div>
-                            </div>
-
                         </div>
                     </Tab>
                 </Tabs>
@@ -130,5 +103,5 @@ function matchDispatchToProps(dispatch){
 
 // We don't want to return the plain UserList (component) anymore, we want to return the smart Container
 //      > UserList is now aware of state and actions
-export default connect(mapStateToProps, matchDispatchToProps)(Hemani);
+export default connect(mapStateToProps, matchDispatchToProps)(Raksha);
 

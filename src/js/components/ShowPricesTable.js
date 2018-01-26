@@ -2,18 +2,11 @@ import React from 'react'
 import { Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import RaisedButton from 'material-ui/RaisedButton';
 import {GetHash} from '../actions/index'
 
 class GetPrice extends React.Component{
-    constructor(props){
-        super(props)
-    }
-
-
     render(){
         var type = this.props.seat.slice(-2);
-
         switch (type){
             case "SL" :
                 return(
@@ -22,6 +15,10 @@ class GetPrice extends React.Component{
             case "ST" :
                 return(
                     <span>{this.props.price.SST}</span>
+                );
+            default:
+                return(
+                    <span>Error please report with screenShot</span>
                 )
         }
     }
@@ -40,6 +37,8 @@ class CalculateTotalCost extends React.Component{
                     break;
                 case "ST" :
                     totalprice = totalprice+this.props.price.SST;
+                    break;
+                default:
                     break;
             }
         }

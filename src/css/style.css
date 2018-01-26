@@ -72,7 +72,9 @@ input[type="text"]:not(.browser-default):focus:not([readonly]){
 
 .busSelect{
     display: flex;
-    width: 80%;
+    width: 1080px;
+    height: 70px;
+    padding: 4px 25px;
     margin: auto;
     background: #75dbd6;
     border-radius: 18px;
@@ -97,5 +99,32 @@ input[type="text"]:not(.browser-default):focus:not([readonly]){
 }
 
 
+.sprite{
+    padding-left: 20px;
+    position: relative;
+
+}
+.sprite:before{
+    content: "";
+    width: 24px;
+    height:24px;
+    position: absolute;
+    left:-6px;
+    background-repeat: no-repeat;
+    top:3px;
+}
+.sprite.callIcon:before{
+    background-image: url("../images/footer/call.png");
+
+}
+.sprite.emailIcon:before{
+    background-image: url("../images/footer/mail.png");
+
+}
+
+.sprite.facebookIcon:before{
+    background-image: url("../images/footer/facebook.png");
+
+}
 
 

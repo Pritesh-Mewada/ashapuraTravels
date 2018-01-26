@@ -6,9 +6,6 @@ import Dialog from 'material-ui/Dialog';
 
 
 class ProgressDialogue extends  React.Component{
-    constructor(props){
-        super(props)
-    }
     render(){
         return (
             <div>

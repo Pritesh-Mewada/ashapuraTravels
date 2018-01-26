@@ -1,6 +1,6 @@
 import React from 'react'
 import * as firebase from 'firebase'
-import {Step, Stepper, StepLabel,StepContent} from 'material-ui/Stepper';
+import {Step, Stepper, StepLabel} from 'material-ui/Stepper';
 import SelectBusBooking from "./SelectBusBooking";
 import ShowBusesAndLayout from "./ShowBusesAndLayout";
 import NavigationArrowForward from 'material-ui/svg-icons/navigation/arrow-forward'
@@ -148,11 +148,11 @@ class BookingStepper extends React.Component {
 
         const {stepIndex} = this.state;
 
-        if(stepIndex==0){
+        if(stepIndex===0){
             this.bookSelected();
         }
-        if(stepIndex==1){
-            if(this.state.Email=="" || this.state.Name=="" || this.state.Number=="" || this.state.Address==""){
+        if(stepIndex===1){
+            if(this.state.Email==="" || this.state.Name==="" || this.state.Number==="" || this.state.Address===""){
                 this.props.Dialog("Fill all the details");
                 return
             }
@@ -173,7 +173,7 @@ class BookingStepper extends React.Component {
 
         }
 
-        if(stepIndex==2){
+        if(stepIndex===2){
             this.submitForm()
         }
 
@@ -276,7 +276,7 @@ class BookingStepper extends React.Component {
     }
 
     render() {
-        const {finished, stepIndex} = this.state;
+        const {stepIndex} = this.state;
         const contentStyle = {margin: '0 16px'};
         return (
             <div>
@@ -322,7 +322,7 @@ class BookingStepper extends React.Component {
                                               style={{marginRight:12}}
                                               buttonStyle={buttonStyle}
                                               onClick={this.handlePrev}
-                                              disabled={stepIndex==0}
+                                              disabled={stepIndex===0}
 
                                 />
                                 <RaisedButton label="Proceed forward"

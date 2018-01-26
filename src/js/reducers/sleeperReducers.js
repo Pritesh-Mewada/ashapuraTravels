@@ -16,6 +16,7 @@ const seats={
         }
 
     },
+    BusName:[],
     user:{
         name:"Pritesh Mewada",
         address:"Ghartan pada no 2",
@@ -40,14 +41,12 @@ const seats={
 
 export default (state = seats, action) => {
     switch (action.type){
-        // Check if action dispatched is
-        // CREATE_BOOK and act on that
         case 'SLEEPER_CLICK':
             var prevBucket = state.userBucket;
             console.log(prevBucket);
             var prevSeats = state.Seats;
 
-            if(prevSeats[action.seat] && prevSeats[action.seat].isHold==true){
+            if(prevSeats[action.seat] && prevSeats[action.seat].isHold===true){
                 delete prevSeats[action.seat];
                 prevBucket.splice(prevBucket.indexOf(action.seat),1)
             }else{
@@ -61,11 +60,17 @@ export default (state = seats, action) => {
 
             break;
         case 'GOT_BUSES':
+            var busName = [];
+            for ( var ab in action.data){
+                busName.push(ab)
+            }
             return Object.assign({},state,{
-                Buses:action.data
+                Buses:action.data,
+                BusName:busName
             });
             break;
         case 'SELECT_BUS':
+            // check the date of availability
             var searchedBus=[];
             for (var a in state.Buses){
                 var bus=state.Buses[a];

@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import Sleeper from "./Sleeper"
-import DoubleSleeper from "./DoubleSleeper"
-import DoubleSeats from "./DoubleSeats"
+import Sleeper from "../Sleeper"
+import DoubleSleeper from "../DoubleSleeper"
+import DoubleSeats from "../DoubleSeats"
 import {Tabs,Tab} from 'material-ui/Tabs'
-import {sleeperClicked} from "../actions/index";
+import {sleeperClicked} from "../../actions/index";
 const containerWidth={
     width:250,
     margin:"auto",
@@ -64,14 +64,6 @@ const rotateLast={
 };
 
 class Rangeela extends React.Component{
-    constructor(props){
-        super(props)
-    }
-
-    componentDidMount(){
-
-    }
-
     render(){
         return(
             <div>
