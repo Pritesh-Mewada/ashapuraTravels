@@ -1,22 +1,24 @@
 import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import {Container ,Row,Col} from 'react-grid-system'
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
 import FontIcon from 'material-ui/FontIcon';
 import {showBusLayout} from '../actions/index'
-import SelectLayout from './SelectLayout'
+
 const iconArrow = {
-    fontSize:28,
+    fontSize:20,
     position:'Relative',
-    top:10
+    top:6,
+    marginLeft:5,
+    marginRight:5
 };
 const textStyle={
   fontSize:16
 };
 const buttonStyle={
     background: "linear-gradient(-45deg, #0000ff, #ff7bac)",
+    borderRadius:25
 };
 const imageService={
     width:25,
@@ -31,74 +33,53 @@ const busStyle={
 };
 class ShowBusesAndLayout extends React.Component{
     handleShow(bus) {
-        var layout ={
-            BusName:this.props.buses[bus].Name,
-            BookingRef:this.props.buses[bus].BookingRef+this.props.route.date,
-            DateStamp:this.props.route.date,
-            Pricing:this.props.buses[bus].Prices,
-            LayoutName:this.props.buses[bus].Layout
-        };
-        this.props.showLayout(layout);
+        this.props.showLayout(this.props.showBus[bus]);
+        this.props.step()
     }
 
     render(){
         return(
             <div>
-                <Container>
-                    <Row>
-                        <Col md={8} style={busStyle}>
-                            {
-                                this.props.showBus.map((bus,index)=>(
-                                    <Paper zDepth={2} key={index} style={{marginBottom:10,padding:10 }}>
-                                        <div className="bus">
-                                            <div>{bus}</div>
-                                            <div>
-                                                <span style={textStyle}>{this.props.route.from +" @ " + this.props.buses[bus].From[this.props.route.from]}</span><FontIcon className="material-icons" style={iconArrow}>arrow_forward</FontIcon><span style={textStyle}>{this.props.route.to +" @ " + this.props.buses[bus].To[this.props.route.to]}</span>
-                                            </div>
-                                        </div>
+                <br/>
+                <br/>
+                { this.props.showBus ?
+                    this.props.showBus.map((bus,index)=>(
+                        <Paper zDepth={2} key={index} style={{marginBottom:10,padding:10 ,borderRadius:10}}>
+                            <div className="bus">
+                                <div>{bus.Name}</div>
+                                <div>
+                                    <img className="imageServices" src={require('../../images/double sleeprxxxhdpi.png')}  alt="logo" /><span className="price">{bus.Price.SL*2}</span>
+                                    <img className="imageServices" src={require('../../images/single slprxxxhdpi.png')}  alt="logo" /><span className="price">{bus.Price.SL}</span>
+                                    <img className="imageServices" src={require('../../images/seatxxxhdpi.png')}  alt="logo" /><span className="price">{bus.Price.ST}</span>
+                                </div>
+                                <div>
+                                    <span style={textStyle}>{this.props.route.from}</span><FontIcon className="material-icons" style={iconArrow}>arrow_forward</FontIcon><span style={textStyle}>{this.props.route.to}</span>
+                                </div>
+                                <div className="Services">
+                                    {
+                                        bus.Services.map((link,index)=>(
+                                            <img src={link} key={index} alt="Services" style={imageService}/>
 
-                                        <div className="Services">
-                                            {
-                                                this.props.buses[bus].Services.map((link,index)=>(
-                                                    <img src={link} key={index} alt="Services" style={imageService}/>
+                                        ))
+                                    }
 
-                                                ))
-                                            }
+                                </div>
 
-                                        </div>
-                                        <div className="wrapper">
-                                            <div>
+                                <div>
+                                    <RaisedButton label="View Seats"
+                                                  labelPosition="after"
+                                                  primary={true}
+                                                  onClick={()=>this.handleShow(index)}
+                                                  buttonStyle={buttonStyle}
+                                                  style={{borderRadius:25}}
 
-                                                <img className="imageServices" src={require('../../images/double sleeprxxxhdpi.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.DSSL}</span>
-                                                <img className="imageServices" src={require('../../images/single slprxxxhdpi.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.USSL}</span>
-                                                <img className="imageServices" src={require('../../images/seatxxxhdpi.png')}  alt="logo" /><span className="price">{this.props.buses[bus].Prices.SST}</span>
+                                    />
+                                </div>
+                            </div>
+                        </Paper>
 
-                                            </div>
-                                            <div>
-                                                <RaisedButton label="View Seats"
-                                                              labelPosition="after"
-                                                              primary={true}
-                                                              onClick={()=>this.handleShow(bus)}
-                                                              buttonStyle={buttonStyle}
-
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </Paper>
-
-                                ))
-                            }
-
-
-                        </Col>
-                        <Col md={4}>
-                            <SelectLayout/>
-
-                        </Col>
-                    </Row>
-
-                </Container>
+                    )): null
+                }
 
             </div>
         )
@@ -116,8 +97,7 @@ function matchDispatchToProps(dispatch){
 }
 const mapStateToProps = (state)=> {
     return {
-        showBus:state.sleeper.searchedBus,
-        buses:state.sleeper.Buses,
+        showBus:state.sleeper.Buses,
         route:state.sleeper.Route,
         seats:state.sleeper.userBucket,
         busLayout:state.sleeper.busLayout

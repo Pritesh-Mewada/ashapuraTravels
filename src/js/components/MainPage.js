@@ -1,29 +1,15 @@
 import React from 'react'
 import {Container ,Row,Col} from 'react-grid-system'
 import Paper from "material-ui/Paper"
-import Divider from 'material-ui/Divider';
 import SelectBus from './SelectBus'
-
 
 const mainPageMiddle={
     backgroundImage:'url(' + require('../../images/main_page_middle.png') + ')' ,
     height:925,
     backgroundRepeat:"no-repeat",
-    marginTop:90
-
+    marginTop:90,
+    backgroundSize:"100%"
 };
-const paperStyle={
-    margin:40,
-    background: "linear-gradient(135deg, rgba(255,130,68,1) 0%, rgba(253,61,83,1) 100%)",
-    padding:10
-};
-
-const paperStyleBlue={
-    margin:40,
-    background: "linear-gradient(135deg, rgba(50,244,233,1) 0%, rgba(135,67,252,1) 100%)",
-    padding:10
-};
-
 const paperStyleService={
     margin:60,
     background: "linear-gradient(135deg, rgba(184,31,230,1) 0%, rgba(36,181,252,1) 100%)",
@@ -38,9 +24,7 @@ const paperStyleSupport={
     padding:10,
     borderRadius:10,
     boxShadow: "0px 35px 50px -13px rgba(0,0,0,0.4)"
-
 };
-
 const paperStyleGuarantee={
     margin:60,
     background: "linear-gradient(135deg, rgba(245,87,108,1) 0%, rgba(240,147,251,1) 100%)",
@@ -52,9 +36,7 @@ const rowMain={
     display:"flex",
     justifyContent:"space-around"
 };
-const footerStyle={
-    width:"100%"
-};
+
 const leftAdjust={
     marginLeft:140,
     marginTop:40
@@ -93,8 +75,6 @@ const spanStyle={
     top:-6
 
 };
-
-
 const listStyle={
     listStyleImage:'url(' + require('../../images/list_icon.png') + ')',
     marginLeft:60
@@ -151,29 +131,29 @@ class MainPage extends React.Component{
                     <h5 style={{margin:"auto",textAlign:"center"}}>Why Shree Shiv Ashapura travels?</h5>
 
                 </div>
-                <Container fluid style={{position:"Relative",top:-75}} >
-                    <Row>
-                        <Col md={4}>
+                <div className="container-fluid" style={{position:"Relative",top:-75}}>
+                    <div className="row">
+                        <div className="col s12 m12 l4 12">
                             <Paper style={paperStyleService} >
                                 <img src={require('../../images/thumb.png')}  alt="logo" style={iconAlign}/> <span style={spanStyle}>Highly Qualified Service</span>
                                 <p style={pStyle}>Our high level of service is officially recognised by thousands of clients.</p>
                             </Paper>
-                        </Col>
-                        <Col md={4}>
+                        </div>
+                        <div className="col s12 m12 l4 12">
                             <Paper style={paperStyleSupport} >
                                 <img src={require('../../images/price.png')}  alt="logo" style={iconAlign}/> <span style={spanStyle}>Highly Qualified Service</span>
                                 <p style={pStyle}>Our high level of service is officially recognised by thousands of clients.</p>
                             </Paper>
-                        </Col>
-                        <Col md={4}>
+                        </div>
+                        <div className="col s12 m12 l4 12">
                             <Paper style={paperStyleGuarantee} >
                                 <img src={require('../../images/care.png')}  alt="logo" style={iconAlign}/> <span style={spanStyle}>Highly Qualified Service</span>
                                 <p style={pStyle}>Our high level of service is officially recognised by thousands of clients.</p>
                             </Paper>
-                        </Col>
+                        </div>
+                    </div>
+                </div>
 
-                    </Row>
-                </Container>
 
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-around",backgroundColor:"#2d2d2d"}}>
                     <div style={{width:300,marginBottom:60}}>

@@ -17,10 +17,10 @@ class DoubleSleeper extends React.Component{
         return(
             <div style={containerWidthDoubleSleeper}>
                 <div style={sleeper}>
-                    <Sleeper book={this.props.book} BookingRef={this.props.BookingRef} status={this.props.status} id={this.props.id[0]}  />
+                    <Sleeper id={this.props.id[0]}  />
                 </div>
                 <div style={sleeper}>
-                    <Sleeper book={this.props.book} BookingRef={this.props.BookingRef} status={this.props.status} id={this.props.id[1]} />
+                    <Sleeper id={this.props.id[1]} />
                 </div>
             </div>
 

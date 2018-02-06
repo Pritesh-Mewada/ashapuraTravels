@@ -1,22 +1,31 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
+import {handleOpenDialog,fetchBuses,BookSlot,BlockBus,CancelBlock,CancelBlockDate} from "../../actions/index";
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField'
 import DatePicker from 'material-ui/DatePicker'
-import {handleOpenDialog,fetchBuses,BookSlot,BlockBus,CancelBlock,CancelBlockDate} from "../../actions/index";
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
-import FontIcon from 'material-ui/FontIcon';
 import SvgIconFace from 'material-ui/svg-icons/action/face';
-import {blue300, indigo900} from 'material-ui/styles/colors';
 import { Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
 import IconButton from 'material-ui/IconButton';
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
+import {Tabs, Tab} from 'material-ui/Tabs';
+
 const rowStyle={
-    display:"flex"
+    display:"flex",
+    justifyContent:"space-between",
+    alignItems:"flex-end",
+    marginLeft:50,
+    marginRight:50
+};
+const tabsWidth={
+    width:"80%",
+    margin:"auto",
+    marginTop:20
 };
 class DynamicPricing extends React.Component{
 
@@ -25,36 +34,27 @@ class DynamicPricing extends React.Component{
         this.state={
             from:"",
             to:"",
+            temp:null,
             dates:[],
             Bus:null,
             Slots:[]
         }
     }
-
-    componentWillMount(){
-        this.props.fetchbus();
-
-
-    }
-
     handleDate = (def,date)=>{
         this.setState({
             from:date,
-            to:date
+            temp:date
         });
+
     };
     handleToDate= (def,date)=>{
         this.setState({
             to:date
         });
     };
-
-
     handleBlockDate= (def,date)=>{
         this.dates = this.state.dates;
-
         this.dates.push(this.formatDate(date));
-
         this.setState({
             dates :this.dates
         });
@@ -62,9 +62,8 @@ class DynamicPricing extends React.Component{
 
     handleRequestDelete=(index)=>{
         console.log("delete button clicked"+index);
+
         this.chipData = this.state.dates;
-
-
         this.chipData.splice(index, 1);
         this.setState({dates: this.chipData});
     };
@@ -93,7 +92,7 @@ class DynamicPricing extends React.Component{
     };
 
     formatDate=(date)=>{
-        return date.getDate() +"/"+(date.getMonth()+1)+"/"+date.getFullYear();
+        return date.toDateString();
     };
 
     handleTextSST=(evt,string)=>{
@@ -105,10 +104,19 @@ class DynamicPricing extends React.Component{
         this.setState({
             ssl:string
         });
-
     };
 
     BookSlot=()=>{
+        if(!this.state.Bus){
+            this.props.Dialog("Please Select a Bus");
+            return
+        }
+
+        if(this.state.from > this.state.to){
+            this.props.Dialog("Please Select proper dates");
+            return;
+
+        }
         this.props.book({
             bus :this.props.BusName[this.state.Bus],
             from :this.formatDate(this.state.from),
@@ -119,6 +127,11 @@ class DynamicPricing extends React.Component{
     };
 
     CancelSlot=(id)=>{
+        if(!this.state.Bus){
+            this.props.Dialog("Please Select a Bus");
+            return
+        }
+
         this.props.cancel({
             id:id,
             bus:this.props.BusName[this.state.Bus]
@@ -126,10 +139,14 @@ class DynamicPricing extends React.Component{
     };
 
     BlockBus=()=>{
+        if(this.state.Bus ==null){
+            this.props.Dialog("Please Select a Bus");
+            return
+        }
         this.props.block({
             bus:this.props.BusName[this.state.Bus],
             dates:this.state.dates
-        })
+        });
         this.setState({
             dates:[]
         })
@@ -145,7 +162,7 @@ class DynamicPricing extends React.Component{
         console.log(bus);
         if(bus.Prices.Slots){
             for (var slot in bus.Prices.Slots){
-                var dataObject = bus.Prices.Slots[slot]
+                var dataObject = bus.Prices.Slots[slot];
                 dataObject['id']=slot;
                 data.push(dataObject)
             }
@@ -164,8 +181,12 @@ class DynamicPricing extends React.Component{
             bus:this.props.BusName[this.state.Bus],
             dates:date
         })
+    };
 
-
+    handleChange = (value) => {
+        this.setState({
+            value: value,
+        });
     };
 
 
@@ -173,137 +194,149 @@ class DynamicPricing extends React.Component{
     render(){
         return(
             <div>
-                <SelectField  floatingLabelText="From"
-                              value={this.state.Bus}
-                              onChange={this.handleFromSelect}
-                >
-                    {
-                        this.props.BusName.map((place, index) => (
-                            <MenuItem value={index} key={index} primaryText={place}/>
-                        ))
-                    }
-                </SelectField>
-                <div style={rowStyle} >
-                    <DatePicker hintText="From Date" onChange={this.handleDate} minDate={new Date((new Date()).setDate((new Date().getDate()+10)))} formatDate={this.formatDate} />
-                    <DatePicker hintText="To Date"  onChange={this.handleToDate} formatDate={this.formatDate} minDate={this.state.to==""? new Date() : new Date(new Date(this.state.to).setDate((this.state.to.getDate()+1)))  } />
-                </div>
-                <div style={rowStyle}>
-                    <div><span>Sleeper Price</span><TextField hintText="Hint Text" onChange={this.handleTextSSL}/></div>
-                    <div><span>Seat Price</span><TextField hintText="Hint Text" onChange={this.handleTextSST}/></div>
-                </div>
-                <Table selectable={false}>
-                    <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
-                        <TableRow>
-                            <TableHeaderColumn >From Date</TableHeaderColumn>
-                            <TableHeaderColumn >From To</TableHeaderColumn>
-                            <TableHeaderColumn >Sleeper Price</TableHeaderColumn>
-                            <TableHeaderColumn >Seat Price</TableHeaderColumn>
-                            <TableHeaderColumn >Booked By</TableHeaderColumn>
-                            <TableHeaderColumn >Actions</TableHeaderColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={false}>
+                <div style={tabsWidth}>
+                    <SelectField  floatingLabelText="Please Select a Bus"
+                                  value={this.state.Bus}
+                                  onChange={this.handleFromSelect}
+                                  fullWidth={true}
+                    >
                         {
-                            this.GetSlots().map((seat,index)=>(
-                                <TableRow key={index}>
-                                    <TableRowColumn>{seat.from}</TableRowColumn>
-                                    <TableRowColumn>{seat.to}</TableRowColumn>
-                                    <TableRowColumn>{seat.SSL}</TableRowColumn>
-                                    <TableRowColumn>{seat.SST}</TableRowColumn>
-                                    <TableRowColumn>Pritesh Mewada</TableRowColumn>
-                                    <TableRowColumn>
-                                        <IconButton
-                                            iconStyle={{
-                                                width: 36,
-                                                height: 36,
-                                            }}
-                                            style={{
-                                                width: 72,
-                                                height: 72,
-                                                padding: 16,
-
-                                            }}
-                                            onClick={()=>this.CancelSlot(seat.id)}
-                                        >
-                                        <NavigationCancel/>
-                                    </IconButton></TableRowColumn>
-                                </TableRow>
-
+                            this.props.BusName.map((place, index) => (
+                                <MenuItem value={index} key={index} primaryText={place}/>
                             ))
                         }
-                    </TableBody>
-                </Table>
-
-                <h5>Already Blocked On</h5>
-                <div>
-                    { this.state.Bus!=null && this.props.buses[this.props.BusName[this.state.Bus]].Availability ? <h5>{
-
-                        this.props.buses[this.props.BusName[this.state.Bus]].Availability.map((date,index)=>(
-                            <Chip
-                                onRequestDelete={()=>this.handleDelete(index)}
-                                // onClick={handleClick}
-                                key={index}
-                            >
-                                <Avatar color="#444" icon={<SvgIconFace />} />
-                                {date}
-                            </Chip>
-
-                        ))
-
-
-
-                    }</h5>:<h5>Data not available</h5>
-
-                    }
+                    </SelectField>
                 </div>
 
-                <RaisedButton primary={true} label="bookSlot" onClick={this.BookSlot}/>
-                <h5>Block the bus</h5>
-                <DatePicker hintText="Select Date" onChange={this.handleBlockDate} minDate={new Date((new Date()).setDate((new Date().getDate()+10)))} formatDate={this.formatDate} />
+                <Tabs
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    style={tabsWidth}
+                >
+                    <Tab label="Book Slots" value="a" >
+                        <div style={{overflowY:"auto"}}>
+                            <div style={rowStyle}>
+                                <DatePicker hintText="From Date" onChange={this.handleDate} minDate={new Date(new Date().getTime()+24*60*60*1000*10)} formatDate={this.formatDate}/>
+                                <DatePicker hintText="To Date"  onChange={this.handleToDate} formatDate={this.formatDate} minDate={this.state.temp ==null ? new Date() : this.state.temp}  />
+                            </div>
+                            <div style={rowStyle}>
+                                <div><TextField floatingLabelText="Sleeper Price" hintText="Enter Sleeper Price" onChange={this.handleTextSSL}/></div>
+                                <div><TextField floatingLabelText="Seat Price" hintText="Enter Seat Price" onChange={this.handleTextSST} /></div>
+                            </div>
+                            <Table selectable={false}>
+                                <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
+                                    <TableRow>
+                                        <TableHeaderColumn >From Date</TableHeaderColumn>
+                                        <TableHeaderColumn >From To</TableHeaderColumn>
+                                        <TableHeaderColumn >Sleeper Price</TableHeaderColumn>
+                                        <TableHeaderColumn >Seat Price</TableHeaderColumn>
+                                        <TableHeaderColumn >Booked By</TableHeaderColumn>
+                                        <TableHeaderColumn >Actions</TableHeaderColumn>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody displayRowCheckbox={false}>
+                                    {
+                                        this.GetSlots().map((seat,index)=>(
+                                            <TableRow key={index}>
+                                                <TableRowColumn>{seat.from}</TableRowColumn>
+                                                <TableRowColumn>{seat.to}</TableRowColumn>
+                                                <TableRowColumn>{seat.SSL}</TableRowColumn>
+                                                <TableRowColumn>{seat.SST}</TableRowColumn>
+                                                <TableRowColumn>Pritesh Mewada</TableRowColumn>
+                                                <TableRowColumn>
+                                                    <IconButton
+                                                        iconStyle={{
+                                                            width: 36,
+                                                            height: 36,
+                                                        }}
+                                                        style={{
+                                                            width: 72,
+                                                            height: 72,
+                                                            padding: 16,
 
-                <div>
-                    {
-                        this.state.dates.map((date,index)=>(
-                            <Chip
-                                onRequestDelete={()=>this.handleRequestDelete(index)}
-                                // onClick={handleClick}
-                                key={index}
-                            >
-                                <Avatar color="#444" icon={<SvgIconFace />} />
-                                {date}
-                            </Chip>
+                                                        }}
+                                                        onClick={()=>this.CancelSlot(seat.id)}
+                                                    >
+                                                        <NavigationCancel/>
+                                                    </IconButton></TableRowColumn>
+                                            </TableRow>
 
-                        ))
-                    }
-                </div>
-                <RaisedButton primary={true} label="Block bus" onClick={this.BlockBus}/>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                            <RaisedButton primary={true} fullWidth={true} label="bookSlot" onClick={this.BookSlot}/>
+                            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        </div>
+                    </Tab>
+                    <Tab label="Block Bus" value="b">
+                        <div>
+                            <h5>Block the bus</h5>
+                            <DatePicker hintText="Select Date" onChange={this.handleBlockDate} minDate={new Date((new Date().getTime()+10*24*60*60*1000))} formatDate={this.formatDate} />
+
+                            <div style={{display:"flex"}}>
+                                {
+                                    this.state.dates.map((date,index)=>(
+                                        <Chip
+                                            onRequestDelete={()=>this.handleRequestDelete(index)}
+                                            // onClick={handleClick}
+                                            key={index}
+                                        >
+                                            <Avatar color="#444" icon={<SvgIconFace />} />
+                                            {date}
+                                        </Chip>
+
+                                    ))
+                                }
+                            </div>
+                            <p>Already Blocked On</p>
+                            <div >
+                                { this.state.Bus!=null && this.props.buses[this.props.BusName[this.state.Bus]].Availability ? <span style={{display:"flex", flexWrap:"wrap",margin:2}} >{
+
+                                    this.props.buses[this.props.BusName[this.state.Bus]].Availability.map((date,index)=>(
+                                        <Chip
+                                            onRequestDelete={()=>this.handleDelete(index)}
+                                            // onClick={handleClick}
+                                            key={index}
+                                        >
+                                            <Avatar color="#444" icon={<SvgIconFace />} />
+                                            {date}
+                                        </Chip>
+
+                                    ))
 
 
+
+                                }</span>:<p>No Dates are available</p>
+
+                                }
+                            </div>
+                            <br/><br/>
+                            <RaisedButton primary={true} label="Block bus" onClick={this.BlockBus} fullWidth={true}/>
+
+                        </div>
+                    </Tab>
+                </Tabs>
             </div>
+
         )
     }
 }
 
-
-
 const mapStateToProps = (state)=> {
     return {
-        buses:state.sleeper.Buses,
-        BusName:state.sleeper.BusName
+        buses:state.Agent.Buses,
+        BusName:state.Agent.BusName
     };
 };
-
-// Get actions and pass them as props to to UserList
-//      > now UserList has this.props.selectUser
 function matchDispatchToProps(dispatch){
     const actions={
         Dialog:handleOpenDialog,
-        fetchbus:fetchBuses,
+        fetchBus:fetchBuses,
         book:BookSlot,
         block:BlockBus,
         cancel:CancelBlock,
         cancelBlock:CancelBlockDate
-
     };
     return bindActionCreators(actions, dispatch);
 }

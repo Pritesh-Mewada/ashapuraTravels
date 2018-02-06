@@ -14,8 +14,7 @@ import * as firebase from 'firebase'
 
 const backgroundStyle = {
     backgroundColor:"#fff",
-    height:175
-
+    height:175,
 };
 
 const buttonStyle={
@@ -24,12 +23,13 @@ const buttonStyle={
 const paperStyle={
     paddingBottom:2,
     paddingLeft:30,
-
+    borderRadius:18
 };
 const selectStyle={
     color:"#2d2d2d",
     fontSize:20,
     fontWeight:500,
+    marginBottom:10
 };
 class SelectBus extends React.Component{
     constructor(props){

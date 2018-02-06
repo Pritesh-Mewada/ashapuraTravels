@@ -3,14 +3,37 @@ import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
-import SelectBusBooking from '../SelectBusBooking'
-import ShowBusesAndLayout from '../ShowBusesAndLayout'
 import DynamicPricing from './DynamicPricing'
-
-
+import SelectSourceDestination from '../SelectSourceDestination'
+import  SelectBusLayout from './SelectBusLayout'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux';
+import {
+    handleOpenDialog, fetchBuses, BookSlot, BlockBus, CancelBlock, CancelBlockDate,
+    NavigateTo
+} from "../../actions/index";
+import SeatView from './SeatView'
+import * as firebase from 'firebase'
 const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
 const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
 const nearbyIcon = <IconLocationOn />;
+
+
+const mystyle={
+    display: "flex",
+    maxWidth: 1080,
+    width: "98%",
+    height: 70,
+    padding: "4px 25px",
+    margin: "auto",
+    background: "#75dbd6",
+    borderRadius: 18,
+    boxShadow:"0px 15px 50px rgba(0,0,0,0.4)",
+    justifyContent: "space-around",
+    alignItems: "flex-end",
+    zIndex:1,
+    position: "relative",
+};
 
 /**
  * A simple example of `BottomNavigation`, with three labels and icons
@@ -25,7 +48,18 @@ const bottomStick={
 class AgentTabs extends Component {
     state = {
         selectedIndex: 0,
+        open: false
     };
+
+    componentWillMount(){
+        if(!firebase.auth().currentUser){
+            this.props.Navigate("/");
+            return
+        }
+        this.props.fetchBus();
+    }
+
+
     select = (index) => this.setState({selectedIndex: index});
 
     getStepContent(stepIndex) {
@@ -33,8 +67,11 @@ class AgentTabs extends Component {
             case 0:
                 return(
                     <div>
-                        <DynamicPricing/>
-
+                        <br/>
+                        <SelectSourceDestination mystyle={mystyle}/>
+                        <br/>
+                        <br/>
+                        <SelectBusLayout/>
                     </div>
 
                 );
@@ -42,14 +79,14 @@ class AgentTabs extends Component {
             case 1:
                 return(
                     <div>
-                        <SelectBusBooking/>
-                        <ShowBusesAndLayout/>
-
+                        <DynamicPricing/>
                     </div>
                 );
             case 2:
                 return (
-                    <span></span>
+                    <div>
+                        <SeatView/>
+                    </div>
                 );
 
             default:
@@ -58,8 +95,8 @@ class AgentTabs extends Component {
     }
     render() {
         return (
-            <div>
-                <div>{this.getStepContent(this.state.selectedIndex)}</div>
+            <div style={{width:"80%",margin:"auto"}}>
+                <div >{this.getStepContent(this.state.selectedIndex)}</div>
                 <Paper zDepth={3} style={bottomStick}>
                     <BottomNavigation selectedIndex={this.state.selectedIndex}>
                         <BottomNavigationItem
@@ -84,4 +121,26 @@ class AgentTabs extends Component {
         );
     }
 }
-export default AgentTabs
+const mapStateToProps = (state)=> {
+    return {
+        buses:state.Agent.Buses,
+        BusName:state.Agent.BusName
+    };
+};
+function matchDispatchToProps(dispatch){
+    const actions={
+        Dialog:handleOpenDialog,
+        fetchBus:fetchBuses,
+        book:BookSlot,
+        block:BlockBus,
+        cancel:CancelBlock,
+        cancelBlock:CancelBlockDate,
+        Navigate:NavigateTo
+    };
+    return bindActionCreators(actions, dispatch);
+}
+
+// We don't want to return the plain UserList (component) anymore, we want to return the smart Container
+//      > UserList is now aware of state and actions
+export default connect(mapStateToProps, matchDispatchToProps)(AgentTabs);
+

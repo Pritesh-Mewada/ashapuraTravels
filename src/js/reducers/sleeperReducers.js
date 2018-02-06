@@ -1,113 +1,168 @@
 // ./src/reducers/bookReducers.js
 
+
+var user={
+        name:"Pritesh Mewada",
+        address:"Ghartan pada no 2",
+        number:"8097394573",
+        mail:"mewadapritesh5@gmail.com"
+};
 const seats={
     Seats:{},
     userBucket:[],
-    Buses:{},
     searchedBus:[],
+    total:0,
     busLayout:{
-        BookingRef: "RangeelaUp3-1-2018",
-        BusName: "Rangeela Travels",
+        Ref: "RangeelaUp3-1-2018tESST",
+        Name: "Rangeela Travels",
         DateStamp: "3/1/2018",
-        LayoutName: "rangeelatype1",
-        Pricing: {
-            SST: 600,
-            USSL: 800
+        Layout: "rangeelatype1",
+        Price: {
+            ST: 600,
+            SL: 800
         }
 
     },
-    BusName:[],
     user:{
         name:"Pritesh Mewada",
         address:"Ghartan pada no 2",
         number:"8097394573",
         mail:"mewadapritesh5@gmail.com"
     },
+
     payment:{
         key:"gtKFFx",
-        txnid:"ashapura"+Math.abs(Math.random()*10000000),
+        txnid:"ashapura233"+Math.floor(Math.random()*1000000),
         amount:2,
         productinfo:"productinfo",
         firstname:"priteshname",
         email:"mewadapritesh5@gmail.com",
         surl:"heydemo",
         furl:"heydemo",
-        phone:"9172977934",
-        udf1:"ello",
+        phone:"+919172977934",
+        udf1:JSON.stringify(user),
+        udf2:"",
         service_provider:"payu_paisa"
     }
 
 };
-
 export default (state = seats, action) => {
     switch (action.type){
         case 'SLEEPER_CLICK':
-            var prevBucket = state.userBucket;
-            console.log(prevBucket);
-            var prevSeats = state.Seats;
+            var userBucket = state.userBucket;
+            var total=state.total;
+            var Seats = state.Seats;
+            var latest =action.seat;
+            var payment =state.payment;
 
-            if(prevSeats[action.seat] && prevSeats[action.seat].isHold===true){
-                delete prevSeats[action.seat];
-                prevBucket.splice(prevBucket.indexOf(action.seat),1)
+            if(Seats[action.seat] && Seats[action.seat].isHold===true){
+                delete Seats[action.seat];
+                total = total-state.busLayout.Price[action.seatType];
+                userBucket.splice(userBucket.indexOf(action.seat),1);
+                if(latest==action.seat){
+                    latest=null
+                }
             }else{
-                prevSeats[action.seat] = {isHold:true};
-                prevBucket.push(action.seat);
+                Seats[action.seat] = {isHold:true};
+                userBucket.push(action.seat);
+                total = total+state.busLayout.Price[action.seatType]
             }
-            return Object.assign({},state,{
-                userBucket:prevBucket,
-                Seats:prevSeats
-            });
+            payment.amount = total;
+            payment.productinfo = userBucket.toString();
+
+            return {...state,
+                userBucket,
+                Seats,
+                latest,
+                total,
+                payment
+            };
 
             break;
         case 'GOT_BUSES':
-            var busName = [];
-            for ( var ab in action.data){
-                busName.push(ab)
-            }
             return Object.assign({},state,{
                 Buses:action.data,
-                BusName:busName
             });
             break;
-        case 'SELECT_BUS':
+        case 'STORE_ROUTE':
             // check the date of availability
-            var searchedBus=[];
-            for (var a in state.Buses){
-                var bus=state.Buses[a];
-                if(bus.From[action.criteria.from]!=null && bus.To[action.criteria.to]){
-                    searchedBus.push(a)
-                }
-            }
             return Object.assign({},state,{
-                searchedBus:searchedBus,
-                Route:action.criteria
+                Route:action.data
             });
+
         case 'SHOW_LAYOUT':
-            return Object.assign({},state,{
-                busLayout:action.data
-            });
-            break;
+            var payment = state.payment;
+
+            var userBucket = [];
+            var busLayout = action.data;
+
+            var reqData = {
+                Ref:action.data.Ref,
+                Name:action.data.Name,
+                PNR:action.data.PNR,
+                Time:action.data.Time,
+                Departure:action.data.Departure,
+
+            };
+
+
+            console.log(JSON.stringify(reqData));
+
+            payment['udf1'] = JSON.stringify(reqData);
+
+            return {...state,busLayout,userBucket,payment};
 
         case 'STORE_USER':
+            var hash = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789uvwxyzABCDEFGHI";
+            var random8 = '';
+            for(var i = 0; i < 10; i++){
+                random8 += hash[parseInt(Math.random()*hash.length)];
+            }
+
+            var layout = state.busLayout;
             var payment = state.payment;
             payment.firstname = action.data.Name;
             payment.email=action.data.Email;
-            payment.phone=action.data.Number;
+            payment.phone="+91"+action.data.Number;
+
+            var reqData = {
+                Ref:layout.Ref,
+                Name:layout.Name,
+                PNR:layout.PNR,
+                Time:layout.Time,
+                Departure:layout.Departure,
+                Point:layout.Point,
+            };
+
+            var reqData2={
+                Journey:state.Route.from+" To "+state.Route.to
+            }
+
+            payment.udf1 = JSON.stringify(reqData);
+            payment.udf2 = JSON.stringify(reqData2);
             payment.productinfo = state.userBucket.toString();
-            payment.udf1=state.busLayout.BookingRef;
+
             return Object.assign({},state,{
                 user:action.data,
                 payment:payment
             });
+
+            break;
+        case 'STORE_HASH':
+            var payment = state.payment;
+            payment['hash'] =action.data;
+            return {...state,
+                payment
+            };
+
         break;
 
-        case 'STORE_HASH':
-            var user = state.user;
-            user['hash']=action.data;
-            return Object.assign({},state,{
-                hash:action.data
-            });
-        break;
+        case 'STORE_BOARDING':
+
+            var busLayout = state.busLayout;
+            busLayout['Point'] = action.data;
+            return{...state,
+                busLayout};
 
         default:
             return state;

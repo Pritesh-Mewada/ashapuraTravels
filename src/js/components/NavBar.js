@@ -35,24 +35,29 @@ class NavBar extends React.Component{
                 <nav>
                     <div className="nav-wrapper" style={{background: "linear-gradient(-151deg, #1e80c5, #63e7b1)"}}>
                         <img src={require('../../images/logo.png')}  alt="logo" style={imageAlign}/>
-                        <ul id="nav-mobile" className="right hide-on-med-and-down">
+                        <ul id="nav-mobile" className="right">
                             <li><NavLink to="/" style={linkText}>HOME</NavLink></li>
                             <li><NavLink to="/" style={linkText}>PNR</NavLink></li>
                             <li><NavLink to="/" style={linkText}>CANCELLATION</NavLink></li>
                             <li><NavLink to="/gallery" style={linkText}>GALLERY</NavLink></li>
                             <li><NavLink to="" style={linkText}>KNOW US</NavLink></li>
-                            <Avatar backgroundColor={"#223e92"} style={avatarAlign} icon={<FontIcon className="material-icons" >person</FontIcon>}/>
-                            <IconMenu
-                                iconButtonElement={<IconButton><NavigationExpandMoreIcon /></IconButton>}
-                                anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-                                targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                            >
-                                <MenuItem primaryText="Refresh" />
-                                <MenuItem primaryText="Send feedback" />
-                                <MenuItem primaryText="Settings" />
-                                <MenuItem primaryText="Help" />
-                                <MenuItem primaryText="Sign out" />
-                            </IconMenu>
+                            <li><NavLink to="/login" style={linkText}><FontIcon className="material-icons icon" >person</FontIcon></NavLink></li>
+
+
+
+
+
+                            {/*<IconMenu*/}
+                                {/*iconButtonElement={<IconButton><NavigationExpandMoreIcon /></IconButton>}*/}
+                                {/*anchorOrigin={{horizontal: 'left', vertical: 'top'}}*/}
+                                {/*targetOrigin={{horizontal: 'left', vertical: 'top'}}*/}
+                            {/*>*/}
+                                {/*<MenuItem primaryText="Refresh" />*/}
+                                {/*<MenuItem primaryText="Send feedback" />*/}
+                                {/*<MenuItem primaryText="Settings" />*/}
+                                {/*<MenuItem primaryText="Help" />*/}
+                                {/*<MenuItem primaryText="Sign out" />*/}
+                            {/*</IconMenu>*/}
                         </ul>
                     </div>
                 </nav>

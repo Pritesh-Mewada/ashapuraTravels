@@ -42,38 +42,38 @@ class Raksha extends React.Component{
                     <Tab label="Top View" value="top" style={tabsStyle}>
                         <div style={containerWidth}>
                             <div style={TopBus}>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="UASSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="UCSSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="UESSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="UGSSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="UISSL"/>
+                                <Sleeper  id="A"/>
+                                <Sleeper  id="C"/>
+                                <Sleeper  id="E"/>
+                                <Sleeper  id="G"/>
+                                <Sleeper  id="I"/>
                             </div>
                             <div style={TopBusMidTop}>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["U1DSL","U2DSL"]}/>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["U3DSL","U4DSL"]}/>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["U5DSL","U6DSL"]}/>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["U7DSL","U8DSL"]}/>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["U9DSL","U10DSL"]}/>
+                                <DoubleSleeper  id={["1","2"]}/>
+                                <DoubleSleeper  id={["3","4"]}/>
+                                <DoubleSleeper  id={["5","6"]}/>
+                                <DoubleSleeper  id={["7","8"]}/>
+                                <DoubleSleeper  id={["9","10"]}/>
                             </div>
                         </div>
                     </Tab>
                     <Tab label="Bottom View" value="bottom" buttonStyle={tabsStyle}>
                         <div style={containerWidth}>
                             <div style={TopBus}>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="DBSSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="DDSSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="DFSSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="DHSSL"/>
-                                <Sleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id="DJSSL"/>
+                                <Sleeper  id="B"/>
+                                <Sleeper  id="D"/>
+                                <Sleeper  id="F"/>
+                                <Sleeper  id="H"/>
+                                <Sleeper  id="J"/>
                             </div>
                             <div style={TopBusMid}>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["D13DSL","D14DSL"]}/>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["D15DSL","D16DSL"]}/>
-                                <DoubleSleeper book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} status={this.props.Seats} id={["D17DSL","D18DSL"]}/>
-                                <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D1SST","D2SST"]} />
-                                <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D3SST","D4SST"]} />
-                                <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D3SST","D4SST"]} />
-                                <DoubleSeats   book={this.props.book} BookingRef={this.props.BusLayout.BookingRef} Seats={this.props.Seats} id={["D3SST","D4SST"]} />
+                                <DoubleSleeper  id={["11","12"]}/>
+                                <DoubleSleeper  id={["13","14"]}/>
+                                <DoubleSleeper  id={["15","16"]}/>
+                                <DoubleSeats   id={["S1","S2"]} />
+                                <DoubleSeats   id={["S3","S4"]} />
+                                <DoubleSeats   id={["S5","S6"]} />
+                                <DoubleSeats   id={["S7","S8"]} />
                             </div>
                         </div>
                     </Tab>

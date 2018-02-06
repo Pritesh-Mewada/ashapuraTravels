@@ -1,10 +1,12 @@
 import { routerActions } from 'react-router-redux'
 import * as firebase from 'firebase'
 import Axios from 'axios'
-const sleeperClicked = (seat) => {
+const sleeperClicked = (seat,seatType) => {
     return {
         type: 'SLEEPER_CLICK',
-        seat: seat
+        seat: seat,
+        seatType:seatType
+
     }
 };
 const GetBuses = (data)=>{
@@ -30,6 +32,20 @@ const GetUser=(user)=>{
         data:user
     }
 };
+
+const AgentGetBus=(data)=>{
+    return{
+        type:"AGENT_FETCH_BUS",
+        data:data
+    }
+};
+
+const StoreBoarding =(point)=>{
+    return{
+        type:'STORE_BOARDING',
+        data:point
+    }
+};
 const OpenProgessDialog=(data)=>{
     return{
         type:'OPEN_DIALOG_PROGRESS',
@@ -39,12 +55,6 @@ const OpenProgessDialog=(data)=>{
 const CloseProgressDialog=()=>{
     return{
         type:'CLOSE_DIALOG_PROGRESS'
-    }
-};
-const searchBuses =(data)=>{
-    return{
-        type:'SELECT_BUS',
-        criteria:data
     }
 };
 const showBusLayout =(data)=>{
@@ -75,30 +85,64 @@ const Storehash=(hash)=>{
     }
 };
 
+const StoreRoute=(route)=>{
+    return{
+        type:'STORE_ROUTE',
+        data:route
+    }
+};
 
+
+const ClearBucket=()=>{
+    return{
+        type:'CLEAR_BUCKET',
+
+    }
+};
+
+const StoreSeat=(seat)=>{
+    return{
+        type:'AGENT_STORE_SEAT',
+        data:seat
+    }
+}
 // async calls
 const GetHash=(data)=>{
     //dont send the amount let the server to calculate it
-    var preHashString =  data.key + '|' + data.txnid + '|' + data.amount + '|' + data.productinfo + '|' + data.firstname + '|' + data.email + '|' + data.udf1 + '||||||||||';
+    var preHashString =  data.key + '|' + data.txnid + '|' + data.amount + '|' + data.productinfo + '|' + data.firstname + '|' + data.email + '|' + data.udf1 + '|'+data.udf2+'|||||||||';
     console.log(preHashString);
-    var post ={
-        preHashString:preHashString
-
-    };
     return (dispatch)=>{
-      return Axios.post('https://ashapura-travels-8bfb5.firebaseapp.com/gethash',post).then(response=>{
-          dispatch(Storehash(response.data))
+        dispatch(OpenProgessDialog("Configuring Please wait"));
+        return Axios.post('https://ashapura-travels-8bfb5.firebaseapp.com/gethash',{
+        preHashString:preHashString
+      }).then(response=>{
+          dispatch(Storehash(response.data));
+          dispatch(CloseProgressDialog());
+
       }).catch(error=>{
           throw error
       })
-  }
+
+    }
+};
+const searchBuses =(data)=>{
+    return (dispatch)=>{
+        dispatch(StoreRoute(data));
+        dispatch(OpenProgessDialog("fetching buses"));
+        return Axios.post('https://ashapura-travels-8bfb5.firebaseapp.com/getbus',data).then(response=>{
+            dispatch(GetBuses(response.data));
+            dispatch(CloseProgressDialog());
+        }).catch(error=>{
+            throw error
+        })
+    }
 };
 
 const fetchBuses = () => {
     return (dispatch) => {
         var buses = firebase.database().ref('Buses');
         return buses.on('value',(data)=>{
-            dispatch(GetBuses(data.val()))
+            dispatch(AgentGetBus(data.val()))
         })
 
     };
@@ -111,8 +155,9 @@ const AgentLogin=(email,password)=>{
         dispatch(OpenProgessDialog("Verifying agent"));
         return signIn.signInWithEmailAndPassword(email, password).then((response)=>{
             dispatch(CloseProgressDialog());
+            dispatch(NavigateTo("/agent"))
         }).catch(error=>{
-            dispatch(CloseProgressDialog())
+            dispatch(CloseProgressDialog());
             dispatch(handleOpenDialog("Error wrong credentials"));
         });
     };
@@ -133,6 +178,7 @@ const BookSlot=(data)=>{
         })
     };
 };
+
 
 const BlockBus=(datesArrayObject)=>{
 //check if the seat is available or not
@@ -170,12 +216,13 @@ const CancelBlockDate=(Block)=>{
             dispatch(temp());
         })
     };
-}
+};
 
-const BookSelected=(seatsAvailable)=>{
+const AgentBookSelected=(seatsAvailable)=>{
 //check if the seat is available or not
+    console.log(seatsAvailable)
     return (dispatch) => {
-        var book = firebase.database().ref('Bookings/'+seatsAvailable.BookingRef.toString());
+        var book = firebase.database().ref('Bookings/'+seatsAvailable.Ref.toString());
         return book.once('value')
             .then((data) => {
                var seatsBooking=data.val();
@@ -186,13 +233,21 @@ const BookSelected=(seatsAvailable)=>{
 
                    if(!seatsBooking[seatsAvailable.Seats[a]]){
                         //inflate the seat object
-                        seatsBooking[seatsAvailable.Seats[a]]={isHold:(new Date()).toJSON()}
+                        seatsBooking[seatsAvailable.Seats[a]]={
+                            isBooked:true,
+                            Name:seatsAvailable.Name,
+                            Number:seatsAvailable.Number
+                        }
                    }else{
                         var getdate = new Date(seatsBooking[seatsAvailable.Seats[a]].isHold);
                         var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
                         if(diff>15){
                             //inflate the seat object
-                            seatsBooking[seatsAvailable.Seats[a]]={isHold:(new Date()).toJSON()}
+                            seatsBooking[seatsAvailable.Seats[a]]={
+                                isBooked:true,
+                                Name:seatsAvailable.Name,
+                                Number:seatsAvailable.Number
+                            }
                         }else{
                             seatsBooking={};
                             dispatch(handleOpenDialog("Some seats are Not Availabe please implement refresh seat action"));
@@ -202,7 +257,56 @@ const BookSelected=(seatsAvailable)=>{
                 }
 
                 book.set(seatsBooking).then(()=>{
-                   dispatch(temp())
+                   dispatch(ClearBucket())
+                })
+
+
+
+            });
+    };
+
+};
+
+const BookSelected=(seatsAvailable)=>{
+//check if the seat is available or not
+    console.log(seatsAvailable)
+    return (dispatch) => {
+        var book = firebase.database().ref('Bookings/'+seatsAvailable.Ref.toString());
+        return book.once('value')
+            .then((data) => {
+                var seatsBooking=data.val();
+                if(!seatsBooking){
+                    seatsBooking={};
+                }
+                for(var a in seatsAvailable.Seats){
+
+                    if(!seatsBooking[seatsAvailable.Seats[a]]){
+                        //inflate the seat object
+                        seatsBooking[seatsAvailable.Seats[a]]={
+                            isHold:(new Date().toJSON()),
+                            Name:seatsAvailable.Name,
+                            Number:seatsAvailable.Number
+                        }
+                    }else{
+                        var getdate = new Date(seatsBooking[seatsAvailable.Seats[a]].isHold);
+                        var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
+                        if(diff>15){
+                            //inflate the seat object
+                            seatsBooking[seatsAvailable.Seats[a]]={
+                                isHold:(new Date().toJSON()),
+                                Name:seatsAvailable.Name,
+                                Number:seatsAvailable.Number
+                            }
+                        }else{
+                            seatsBooking={};
+                            dispatch(handleOpenDialog("Some seats are Not Availabe please implement refresh seat action"));
+                            return
+                        }
+                    }
+                }
+
+                book.set(seatsBooking).then(()=>{
+                    dispatch(ClearBucket())
                 })
 
 
@@ -213,4 +317,5 @@ const BookSelected=(seatsAvailable)=>{
 };
 
 
-export {AgentLogin,CancelBlockDate,CancelBlock,GetHash,GetUser,NavigateTo,BlockBus,BookSelected,showBusLayout,sleeperClicked,OpenProgessDialog,CloseProgressDialog,GetBuses,handleOpenDialog,handleCloseDialog,fetchBuses,searchBuses,BookSlot}
+
+export {AgentLogin,AgentBookSelected,StoreBoarding,StoreSeat,CancelBlockDate,CancelBlock,GetHash,GetUser,fetchBuses,NavigateTo,BlockBus,BookSelected,showBusLayout,sleeperClicked,OpenProgessDialog,CloseProgressDialog,GetBuses,handleOpenDialog,handleCloseDialog,searchBuses,BookSlot}

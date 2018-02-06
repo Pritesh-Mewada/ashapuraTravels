@@ -36,7 +36,6 @@ class LoginAgent extends  React.Component{
             this.props.Dialog("Fill all the fields")
         }
         this.props.Login(this.state.login,this.state.password);
-        console.log(this.state);
     }
 
     render(){

@@ -32,8 +32,6 @@ class SelectRouteBusSeat extends React.Component{
             date:null
 
         };
-
-
         this.handleFromSelect = this.handleFromSelect.bind(this);
         this.handleToSelect = this.handleToSelect.bind(this);
         this.handleDate = this.handleDate.bind(this);

@@ -9,8 +9,8 @@ class DoubleSeats extends React.Component{
     render(){
         return(
             <div style={containerWidth}>
-                <Seat book={this.props.book} BookingRef={this.props.BookingRef} status={this.props.Seats} id={this.props.id[0]}/>
-                <Seat book={this.props.book} BookingRef={this.props.BookingRef} status={this.props.Seats} id={this.props.id[1]}/>
+                <Seat id={this.props.id[0]}/>
+                <Seat id={this.props.id[1]}/>
             </div>
 
 
