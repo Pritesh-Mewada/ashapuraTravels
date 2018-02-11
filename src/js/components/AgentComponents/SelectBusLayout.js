@@ -110,7 +110,7 @@ class SelectBusLayout extends React.Component{
                 <Container>
                     <Row>
                         <Col md={8} style={busStyle}>
-                            { this.props.showBus ?
+                            { this.props.showBus && this.props.showBus.length!=0 ?
                                 this.props.showBus.map((bus,index)=>(
                                     <Paper zDepth={2} key={index} style={{marginBottom:10,padding:10 }}>
                                         <div className="bus">
@@ -132,9 +132,9 @@ class SelectBusLayout extends React.Component{
                                         <div className="wrapper">
                                             <div>
 
-                                                <img className="imageServices" src={require('../../../images/double sleeprxxxhdpi.png')}  alt="logo" /><span className="price">{bus.Price.SL*2}</span>
-                                                <img className="imageServices" src={require('../../../images/single slprxxxhdpi.png')}  alt="logo" /><span className="price">{bus.Price.SL}</span>
-                                                <img className="imageServices" src={require('../../../images/seatxxxhdpi.png')}  alt="logo" /><span className="price">{bus.Price.ST}</span>
+                                                <img className="imageServices" src={require('../../../images/icons/doublesleeper.png')}  alt="logo" /><span className="price">{bus.Price.SL*2}</span>
+                                                <img className="imageSleeper" src={require('../../../images/icons/singlesleeper.png')}  alt="logo" /><span className="price">{bus.Price.SL}</span>
+                                                <img className="imageServices" src={require('../../../images/icons/seat.png')}  alt="logo" /><span className="price">{bus.Price.ST}</span>
 
                                             </div>
                                             <div>
@@ -150,56 +150,68 @@ class SelectBusLayout extends React.Component{
 
                                     </Paper>
 
-                                )):<h2>No Buses Available</h2>
+                                )):(this.props.showBus ? <div style={{textAlign:"right",paddingRight:70}}>
+                                    <br/><br/><br/>
+                                    <img src={require('../../../images/no_bus.png')}   alt="no bus" width="256" height="193" />
+                                </div>:<div style={{textAlign:"right",paddingRight:70}}>
+                                    <br/><br/><br/>
+                                    <img src={require('../../../images/select_bus.png')}   alt="no bus" width="193" height="193" />
+                                </div>)
                             }
 
 
                         </Col>
                         <Col md={4}>
-                            <SelectLayout/>
-                            <br/>
-                            <RaisedButton onClick={this.handleOpen} label="Book all tickets" primary={true} fullWidth={true}/>
-                            <Dialog
-                                title="Please Fill the details"
-                                actions={actions}
-                                modal={false}
-                                open={this.state.open}
-                                onRequestClose={this.handleClose}
-                            >
-                                <TextField
-                                    hintText="Name"
-                                    floatingLabelText="Passenger Name"
-                                    type="text"
-                                    fullWidth={true}
-                                    floatingLabelStyle={{fontSize:18}}
-                                    onChange={this.handleName}
+                            {
+                                this.props.busLayout ? <div>
+                                    <SelectLayout/>
+                                    <br/>
+                                    <RaisedButton onClick={this.handleOpen} label="Book all tickets" primary={true} fullWidth={true}/>
+                                    <Dialog
+                                        title="Please Fill the details"
+                                        actions={actions}
+                                        modal={false}
+                                        open={this.state.open}
+                                        onRequestClose={this.handleClose}
+                                    >
+                                        <TextField
+                                            hintText="Name"
+                                            floatingLabelText="Passenger Name"
+                                            type="text"
+                                            fullWidth={true}
+                                            floatingLabelStyle={{fontSize:18}}
+                                            onChange={this.handleName}
 
-                                />
-                                <br/>
-                                <TextField
-                                    hintText="Mobile number"
-                                    floatingLabelText="Passenger mobile number"
-                                    type="text"
-                                    fullWidth={true}
-                                    floatingLabelStyle={{fontSize:18}}
-                                    onChange={this.handleNumber}
+                                        />
+                                        <br/>
+                                        <TextField
+                                            hintText="Mobile number"
+                                            floatingLabelText="Passenger mobile number"
+                                            type="text"
+                                            fullWidth={true}
+                                            floatingLabelStyle={{fontSize:18}}
+                                            onChange={this.handleNumber}
 
-                                />
-                                <br/>
-                                <SelectField  floatingLabelText="Boarding Point"
-                                              value={this.state.from}
-                                              onChange={this.handleBoardingSelect}
-                                >
-                                    { this.props.storage.busLayout && this.props.storage.busLayout.Boarding ?
-                                        this.props.storage.busLayout.Boarding.map((place, index) => (
-                                            <MenuItem value={index} key={index} primaryText={place}/>
-                                        )):null
-                                    }
+                                        />
+                                        <br/>
+                                        <SelectField  floatingLabelText="Boarding Point"
+                                                      value={this.state.from}
+                                                      onChange={this.handleBoardingSelect}
+                                        >
+                                            { this.props.storage.busLayout && this.props.storage.busLayout.Boarding ?
+                                                this.props.storage.busLayout.Boarding.map((place, index) => (
+                                                    <MenuItem value={index} key={index} primaryText={place}/>
+                                                )):null
+                                            }
 
-                                </SelectField>
-                                <h3>{"Amount to be taken"+this.props.storage.total}</h3>
-                            </Dialog>
-                            <br/><br/><br/><br/><br/>
+                                        </SelectField>
+                                        <h3>{"Amount to be taken"+this.props.storage.total}</h3>
+                                    </Dialog>
+                                    <br/><br/><br/><br/><br/>
+                                </div> :null
+                            }
+
+
                         </Col>
                     </Row>
 
@@ -226,6 +238,8 @@ const mapStateToProps = (state)=> {
         showBus:state.sleeper.Buses,
         route:state.sleeper.Route,
         storage:state.sleeper,
+        busLayout:state.sleeper.busLayout
+
 
     };
 };

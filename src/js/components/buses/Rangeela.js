@@ -16,19 +16,22 @@ const containerWidth={
 const TopBus={
     float :"left",
     marginLeft:"5px",
-    marginTop:'5px'
+    marginTop:'5px',
+    marginBottom:'10px'
 };
 const TopBusMid={
     float :"left",
     marginLeft:"100px",
     marginTop:'5px',
+    marginBottom:'10px'
 
 };
 const TopBusMidTop={
     float :"left",
     marginLeft:"100px",
     marginTop:'5px',
-    height:530
+    height:530,
+    marginBottom:'10px'
 };
 const BathRoomStyle={
     backgroundColor:"#558B2F",

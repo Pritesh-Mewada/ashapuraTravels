@@ -18,21 +18,7 @@ const imageAlign={
 
 };
 
-const mystyle={
-    display: "flex",
-    maxWidth: 1080,
-    width: "98%",
-    height: 70,
-    padding: "4px 25px",
-    margin: "auto",
-    background: "#75dbd6",
-    borderRadius: 18,
-    boxShadow:"0px 15px 50px rgba(0,0,0,0.4)",
-    justifyContent: "space-around",
-    alignItems: "flex-end",
-    zIndex:1,
-    position: "relative",
-};
+
 class SelectBus extends React.Component{
 
     render(){
@@ -44,7 +30,7 @@ class SelectBus extends React.Component{
                 <br/>
                 <br/>
                 <br/>
-                <SelectSourceDestination mystyle={mystyle}/>
+                <SelectSourceDestination />
                 <img src={require('../../images/select_bottom.png')}  alt="logo" style={imageAlign}/>
 
                 <div className="box_bus">

@@ -112,7 +112,7 @@ class DynamicPricing extends React.Component{
     };
 
     BookSlot=()=>{
-        if(!this.state.Bus){
+        if(this.state.Bus ==null){
             this.props.Dialog("Please Select a Bus");
             return
         }

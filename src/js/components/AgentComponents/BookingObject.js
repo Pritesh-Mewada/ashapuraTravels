@@ -11,13 +11,26 @@ import * as firebase from 'firebase';
 
 const tabsWidth={
     width:"80%",
-    display:"flex",
-    justifyContent:"space-between",
-    margin:"auto",
-    alignItems:"flex-end",
+    display:"inline-flex"
 };
 
 
+const textStyle={
+    fontSize:18
+};
+
+const divStyle3={
+    marginLeft:90,
+    marginTop:35
+};
+const divStyle2={
+    marginLeft:90,
+    marginTop:35
+};
+const divStyle1={
+    marginLeft:20,
+    marginTop:10
+};
 class BookingObject extends  React.Component {
 
     constructor(){
@@ -52,26 +65,27 @@ class BookingObject extends  React.Component {
                         <Paper zDepth={2} style={{marginBottom:5}}>
                             <div>
                                 <div style={tabsWidth}>
-                                    <div>
-                                        <h5>{this.state.data.Name}</h5>
-                                        <h5>{"Rs: "+this.state.data.Amount}</h5>
-                                        <h5>{"PNR: "+this.props.Ref}</h5>
+                                    <div style={divStyle1}>
+                                        <span style={textStyle}><b>{this.state.data.Name}</b></span><br/>
+                                        <span style={textStyle}>Rs: <b>{this.state.data.Amount}</b></span><br/>
+                                        <span style={textStyle}>PNR: <b>{this.props.Ref}</b></span><br/><br/>
                                     </div>
-                                    <div>
-                                        <h5>{"Seat: "+this.props.No}</h5>
-                                        <h5>{"Boarding Point: "+this.state.data.Point}</h5>
+                                    <div style={divStyle2}>
+                                        <span style={textStyle}>Seat: <b>{this.props.No}</b></span><br/>
+                                        <span style={textStyle}>Boarding Point: <b>{this.state.data.Point}</b></span><br/>
                                     </div>
-                                    <div>
-                                        <h5>{"Mob No: "+this.state.data.Number}</h5>
-                                        <h5>{"Booked by: "+this.props.book}</h5>
+                                    <div style={divStyle3}>
+                                        <span style={textStyle}>Mob No: <b>{this.state.data.Number}</b></span><br/>
+                                        <span style={textStyle}>Booked by: <b></b></span><br/>
                                     </div>
                                 </div>
-                                <div style={{display:"flex",justifyContent:"flex-end"}}>
-                                    <RaisedButton primary={true} label="Cancel" onClick={this.handleClick}  />
+                                <div style={{float:"right",position: "relative",top: 40,right: 25}}>
+                                    <RaisedButton primary={true} label="Cancel" onClick={this.handleClick} />
                                 </div>
                             </div>
                         </Paper> :null
                 }
+
             </div>
 
 

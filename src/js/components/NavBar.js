@@ -1,10 +1,10 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import FontIcon from 'material-ui/FontIcon';
 const imageAlign={
     verticalAlign: "middle",
     marginLeft:20,
-    width:225,
+    width:315,
     height:35,
 };
 const linkText={

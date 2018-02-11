@@ -14,18 +14,21 @@ const containerWidth={
 const TopBus={
     float :"left",
     marginLeft:"5px",
-    marginTop:'5px'
+    marginTop:'5px',
+    marginBottom:'10px'
 };
 const TopBusMid={
     float :"left",
     marginLeft:"100px",
     marginTop:'5px',
+    marginBottom:'10px'
 
 };
 const TopBusMidTop={
     float :"left",
     marginLeft:"100px",
     marginTop:'5px',
+    marginBottom:'10px'
 };
 const tabsStyle={
     //DEFINE YOUR TAB BUTTON STYLE HERE

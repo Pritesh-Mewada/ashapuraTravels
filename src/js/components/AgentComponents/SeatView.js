@@ -126,11 +126,17 @@ class SeatView extends React.Component {
                         this.props.Seats != null ?
                             this.props.Seats.map((seat, index) => {
                                 return (
-                                    <BookingObject No={seat.No}  Ref={seat.PNR} date={this.state.FormatDate} book={seat.BookedBy} key={index} open={()=>this.handleOpen(seat.PNR)}/>
+                                    <BookingObject No={seat.No} Ref={seat.PNR} date={this.state.FormatDate}
+                                                   book={seat.BookedBy} key={index}
+                                                   open={() => this.handleOpen(seat.PNR)}/>
                                 )
 
-                            }) :  <h5>{this.state.Status}</h5>
+                            }) : (  <div style={{textAlign: "center"}}>
+                                        <br/><br/><br/>
+                                        <img src={require('../../../images/seat_details.png')} alt="no bus" width="193" height="193"/>
+                                    </div>)
                     }
+
                     <Dialog
                         actions={actions}
                         modal={false}

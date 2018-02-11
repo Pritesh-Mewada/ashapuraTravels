@@ -14,8 +14,11 @@ class ProgressDialogue extends  React.Component{
                     open={this.props.DialogParams.status}
                     onRequestClose={this.props.handleClose}
                 >
-                    <CircularProgress size={60} thickness={5}/>
-                    <span style={{marginLeft:10,position:'Relative',top:-15,fontSize:22}}>{this.props.DialogParams.statement}</span>
+                    <div style={{margin:"auto"}}>
+                        <CircularProgress size={60} thickness={8}/>
+                        <span style={{marginLeft:10,position:'Relative',top:-18,fontSize:22}}>{this.props.DialogParams.statement}</span>
+                    </div>
+
                 </Dialog>
             </div>
         )

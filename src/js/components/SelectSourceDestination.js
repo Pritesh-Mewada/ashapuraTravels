@@ -21,17 +21,31 @@ const buttonStyle={
 };
 const calenderStyle={
     marginLeft:40,
-    marginBottom:8,
     marginRight:20,
-    position: "relative",
-    top: -7,
     fontSize: 21,
-    color:"#eee",
+    color:"#fff",
     fontFamily:"Roboto",
     fontWeight:500
 };
+const calenderIcon={
+    marginBottom:8,
+};
+const mystyle={
+    display: "flex",
+    maxWidth: 1080,
+    width: "98%",
+    height: 70,
+    padding: "4px 25px",
+    margin: "auto",
+    background: "#75dbd6",
+    borderRadius: 18,
+    boxShadow:"0px 15px 50px rgba(0,0,0,0.4)",
+    justifyContent: "space-around",
+    alignItems: "flex-end",
+    zIndex:1,
+    position: "relative",
+};
 class SelectSourceDestination extends React.Component {
-
     constructor(props) {
         super(props);
         if(this.props.Route){
@@ -52,7 +66,6 @@ class SelectSourceDestination extends React.Component {
 
             }
         }
-
         this.handleFromSelect = this.handleFromSelect.bind(this);
         this.handleToSelect = this.handleToSelect.bind(this);
         this.handleDate = this.handleDate.bind(this);
@@ -137,7 +150,7 @@ class SelectSourceDestination extends React.Component {
     render(){
 
         return(
-            <div style={this.props.mystyle}>
+            <div style={mystyle}>
                 <div>
                     <SelectField  floatingLabelText="From"
                                   value={this.state.from}
@@ -175,7 +188,7 @@ class SelectSourceDestination extends React.Component {
                                  ref='dp'
                     />
                     <span style={calenderStyle}>{this.state.date}</span>
-                    <img src={require('../../images/calander.png')}  alt="calendar_logo" onClick={this.openDatePicker} />
+                    <img  style={calenderIcon} src={require('../../images/calander.png')}  alt="calendar_logo" onClick={this.openDatePicker} />
 
                 </div>
                 <div>

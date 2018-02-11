@@ -40,9 +40,8 @@ const sleepStyleBooked={
 const pillow={
     width:"25px",
     height:"10px",
-    borderRadius:"8px",
-    boxShadow:"0px 2px 5px #2d2d2d",
-    margin:"auto"
+    margin:"auto",
+    backgroundColor:"rgba(0,0,0,0.15)"
 };
 const seatHover={
     position:"absolute",

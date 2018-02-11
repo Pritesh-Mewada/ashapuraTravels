@@ -4,11 +4,13 @@ import {bindActionCreators} from 'redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField'
 import {handleOpenDialog,AgentLogin} from "../../actions/index";
+import FontIcon from 'material-ui/FontIcon';
 
 const container ={
     width:400,
     margin:"auto",
     marginTop:100,
+    textAlign:"center"
 
 };
 
@@ -43,6 +45,7 @@ class LoginAgent extends  React.Component{
     render(){
         return (
             <div style={container}>
+                <FontIcon className="material-icons loginicon" >person</FontIcon>
                 <TextField
                     hintText="Login Id"
                     floatingLabelText="Agent"

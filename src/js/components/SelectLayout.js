@@ -11,23 +11,35 @@ class SelectLayout extends React.Component{
             switch (this.props.busLayout.Layout){
                 case "rangeelatype1" :
                     return(
-                        <Paper zDepth={2}>
-                            <Rangeela/>
-                        </Paper>
+                        <div>
+                            <img src={require("../../images/busSeat.png")} alt="busLogo" width="350" height="18"/>
+                            <Paper zDepth={2}>
+                                <Rangeela/>
+                            </Paper>
+                        </div>
+
 
                     );
                 case "hemanitype1" :
                     return(
-                        <Paper zDepth={2}>
-                            <Hemani/>
-                        </Paper>
+                        <div>
+                            <img src={require("../../images/busSeat.png")} alt="busLogo" width="350" height="18"/>
+                            <Paper zDepth={2}>
+                                <Hemani/>
+                            </Paper>
+                        </div>
+
 
                     );
                 case "rakshatype1" :
                     return(
-                        <Paper zDepth={2}>
-                            <Raksha/>
-                        </Paper>
+                        <div>
+                            <img src={require("../../images/busSeat.png")} alt="busLogo" width="350" height="18"/>
+                            <Paper zDepth={2}>
+                                <Raksha/>
+                            </Paper>
+                        </div>
+
                     );
                 default:
                     <h1>Please Select a bus</h1>

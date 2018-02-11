@@ -5,6 +5,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import NavBar from './NavBar'
 import Main from './Main'
 import ProgressDialogue from './ProgressDialogue'
+import Footer from "./footer";
 
 
 const muiTheme = getMuiTheme({

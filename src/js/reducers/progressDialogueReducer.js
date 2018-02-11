@@ -1,6 +1,6 @@
 const seats={
     status:false,
-    statement:"Hello this statement is true"
+    statement:"Progress dialogue hai sirji"
 };
 
 export default (state = seats, action) => {
@@ -9,7 +9,6 @@ export default (state = seats, action) => {
             return Object.assign({},state,{
                 status:false
             });
-
             break;
 
         case 'OPEN_DIALOG_PROGRESS':

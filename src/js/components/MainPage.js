@@ -173,6 +173,7 @@ class MainPage extends React.Component{
                     </div>
                 </div>
                 <div style={{height:10,background: "linear-gradient(-151deg,#63e7b1, #1e80c5 )"}}></div>
+
             </div>
         )
     }

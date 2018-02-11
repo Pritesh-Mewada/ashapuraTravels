@@ -14,9 +14,9 @@ import {
 } from "../../actions/index";
 import SeatView from './SeatView'
 import * as firebase from 'firebase'
-const recentsIcon = <FontIcon className="material-icons">restore</FontIcon>;
-const favoritesIcon = <FontIcon className="material-icons">favorite</FontIcon>;
-const nearbyIcon = <IconLocationOn />;
+const recentsIcon = <FontIcon className="material-icons">event_seat</FontIcon>;
+const favoritesIcon = <FontIcon className="material-icons">assignment_turned_in</FontIcon>;
+const nearbyIcon = <FontIcon className="material-icons">description</FontIcon>;
 
 
 const mystyle={
@@ -105,17 +105,17 @@ class AgentTabs extends Component {
                 <Paper zDepth={3} style={bottomStick}>
                     <BottomNavigation selectedIndex={this.state.selectedIndex}>
                         <BottomNavigationItem
-                            label="Recents"
+                            label="Book Seats"
                             icon={recentsIcon}
                             onClick={() => this.select(0)}
                         />
                         <BottomNavigationItem
-                            label="Favorites"
+                            label="Book Slots"
                             icon={favoritesIcon}
                             onClick={() => this.select(1)}
                         />
                         <BottomNavigationItem
-                            label="Nearby"
+                            label="Booking Details"
                             icon={nearbyIcon}
                             onClick={() => this.select(2)}
                         />

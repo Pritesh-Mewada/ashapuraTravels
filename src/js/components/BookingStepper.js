@@ -16,29 +16,25 @@ import SelectSourceDestination from './SelectSourceDestination'
 import Ticket from './Ticket'
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Footer from "./footer";
 
 const formStyle={
     width:'80%',
     margin:'auto'
 };
-const buttonStyle={
+const buttonStyleRight={
     background: "linear-gradient(-151deg, #1e80c5, #63e7b1)",
+    clipPath:"polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%)",
 };
 
-const mystyle={
-    display: "flex",
-    maxWidth: 1080,
-    width: "98%",
-    height: 70,
-    padding: "4px 25px",
-    margin: "auto",
-    background: "#75dbd6",
-    borderRadius: 18,
-    justifyContent: "space-around",
-    boxShadow: "1px 1px 40px -4px rgba(0,0,0,0.75)",
-    alignItems: "flex-end",
-    zIndex:1,
-    position: "relative",
+const buttonStyleLeft={
+    background: "linear-gradient(-151deg, #1e80c5, #63e7b1)",
+    clipPath:"polygon(100% 0%, 10% 0%, 0% 50%, 10% 100%,100% 100%)",
+};
+const selectStyle={
+    color:"rgba(0,0,0,0.3)",
+    fontSize:18,
+    marginBottom:5
 };
 class BookingStepper extends React.Component {
     constructor(){
@@ -175,7 +171,6 @@ class BookingStepper extends React.Component {
         }
 
          if(stepIndex===2) {
-
              if (this.state.Email === "" || this.state.Name === "" || this.state.Number === "" || this.state.from == null) {
                  this.props.Dialog("Fill all the details");
                  return
@@ -194,18 +189,9 @@ class BookingStepper extends React.Component {
                  return
              }
 
-             var user={
-                 Name:this.state.Name,
-                 Email:this.state.Email,
-                 Number:this.state.Number,
-                 Address:this.state.Address
-             };
-
-
              this.bookSelected();
              this.props.GetHash(this.props.Payment.payment);
-
-        }
+         }
 
 
 
@@ -232,7 +218,7 @@ class BookingStepper extends React.Component {
             case 0:
                 return(
                     <div >
-                        <SelectSourceDestination mystyle={mystyle}/>
+                        <SelectSourceDestination />
                         <ShowBusesAndLayout step={this.handleNextBus} />
                     </div>
 
@@ -240,48 +226,39 @@ class BookingStepper extends React.Component {
 
             case 1:
                 return(
-                    <Container >
-                        <Row>
-                            <Col md={1} >
-                            </Col>
-                            <Col md={4}>
-                                <SelectLayout/>
-                            </Col>
-                            <Col md={2}>
-                            </Col>
-                            <Col md={4}>
-                                <Ticket/>
-                            </Col>
-                            <Col md={1}>
-                            </Col>
-
-                        </Row>
-
-                    </Container>
-
+                    <div style={{display:"flex",justifyContent:"space-around"}}>
+                        <div style={{width:350}}>
+                            <SelectLayout/>
+                        </div>
+                        <div>
+                            <Ticket/>
+                        </div>
+                    </div>
                 );
             case 2:
                 return (
-                    <Container >
-                        <Row>
-                            <Col md={1} >
-                            </Col>
-                            <Col md={4}>
-                                <span>
+
+                    <div style={{display:"flex",justifyContent:"space-around"}}>
+                        <div style={{width:500}}>
+                            <span>
                                     <div style={formStyle}>
                                      <TextField
-                                        hintText="Passenger name"
-                                        floatingLabelText="Name"
-                                        type="text"
-                                        fullWidth={true}
-                                        floatingLabelStyle={{fontSize:18}}
-                                        onChange={this.handleName}
+                                         hintText="Passenger name"
+                                         floatingLabelText="Name"
+                                         type="text"
+                                         fullWidth={true}
+                                         floatingLabelStyle={{fontSize:18}}
+                                         onChange={this.handleName}
 
-                                    />
+                                     />
                                     <br/>
                                     <SelectField  floatingLabelText="Boarding Point"
                                                   value={this.state.from}
                                                   onChange={this.handleBoardingSelect}
+                                                  floatingLabelStyle={selectStyle}
+                                                  labelStyle={selectStyle}
+                                                  fullWidth={true}
+
                                     >
                                     {
                                         this.props.Layout.busLayout.Boarding.map((place, index) => (
@@ -301,36 +278,30 @@ class BookingStepper extends React.Component {
                                     />
                                     <br/>
                                      <TextField
-                                        hintText="Email Id"
-                                        floatingLabelText="Mail"
-                                        type="emailId"
-                                        fullWidth={true}
-                                        floatingLabelStyle={{fontSize:18}}
-                                        onChange={this.handleEmail}
-                                    />
+                                         hintText="Email Id"
+                                         floatingLabelText="Mail"
+                                         type="emailId"
+                                         fullWidth={true}
+                                         floatingLabelStyle={{fontSize:18}}
+                                         onChange={this.handleEmail}
+                                     />
                                     <br/>
                                     <OtpVerification show={this.state.ShowOtp} verifyOtp={this.verifyOtp}/>
                                         { this.state.ShowOtp ? null : <div id="recaptcha-container"></div> }
                                         <br/><br/><br/>
                                 </div>
                                 </span>
-                            </Col>
-                            <Col md={2}>
-                            </Col>
-                            <Col md={4}>
-                                <Ticket/>
-                            </Col>
-                            <Col md={1}>
-                            </Col>
-
-                        </Row>
-                    </Container>
-
-
+                        </div>
+                        <div>
+                            <Ticket/>
+                        </div>
+                    </div>
                 );
             case 3: return(
                 <div>
-                    <h5>Proceed for the payment</h5>
+                    <div>
+                        <Ticket/>
+                    </div>
                     <form ref="formToSubmit" id="paymentForm" action='https://test.payu.in/_payment' method='post'>
                         <input type="hidden" name="key" value={this.props.Payment.payment.key} />
                         <input type="hidden" name="txnid" value={this.props.Payment.payment.txnid} />
@@ -351,7 +322,7 @@ class BookingStepper extends React.Component {
                 </div>
             );
             default:
-                return 'You\'re a long way from home sonny jim!';
+                return 'You are going to have a nice journey with us';
         }
     }
 
@@ -378,13 +349,14 @@ class BookingStepper extends React.Component {
                     <div style={contentStyle}>
                         <div>
                             <div>{this.getStepContent(stepIndex)}</div>
+                            <br/><br/><br/>
                             <div style={{display:'flex',justifyContent:"center"}}>
                                 <RaisedButton label="Go Backward"
                                               labelPosition="after"
                                               primary={true}
                                               icon={<NavigationArrowBack/>}
                                               style={{marginRight:12}}
-                                              buttonStyle={buttonStyle}
+                                              buttonStyle={buttonStyleLeft}
                                               onClick={this.handlePrev}
                                               disabled={stepIndex===0}
 
@@ -394,18 +366,16 @@ class BookingStepper extends React.Component {
                                               primary={true}
                                               icon={<NavigationArrowForward/>}
                                               style={{marginLeft:12}}
-                                              buttonStyle={buttonStyle}
+                                              buttonStyle={buttonStyleRight}
                                               onClick={this.handleNext}
                                 />
                             </div>
-                            <br/><br/><br/>
-
+                            <br/><br/><br/><br/><br/>
                         </div>
-
-
                     </div>
+
                 </div>
-                <img src={require('../../images/footer.png')}  alt="footer" style={{width:"100%"}}/>
+                <Footer/>
             </div>
 
         );

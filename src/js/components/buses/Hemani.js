@@ -15,18 +15,21 @@ const containerWidth={
 const TopBus={
     float :"left",
     marginLeft:"5px",
-    marginTop:'5px'
+    marginTop:'5px',
+    marginBottom:'10px'
 };
 const TopBusMid={
     float :"left",
     marginLeft:"55px",
     marginTop:'5px',
+    marginBottom:'10px'
 
 };
 const TopBusMidTop={
     float :"left",
     marginLeft:"55px",
     marginTop:'5px',
+    marginBottom:'10px'
 };
 
 const backSeats ={

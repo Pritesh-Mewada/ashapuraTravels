@@ -379,7 +379,7 @@ const BookSelected=(seatsAvailable)=>{
                 }
 
                 book.set(seatsBooking).then(()=>{
-                    dispatch(ClearBucket())
+                    dispatch(CloseProgressDialog());
                 })
 
 
