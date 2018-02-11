@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import {OpenProgessDialog,CloseProgressDialog,handleOpenDialog} from "../../actions/index";
+import {OpenProgessDialog, CloseProgressDialog, handleOpenDialog, GetSeats} from "../../actions/index";
 import RaisedButton from 'material-ui/RaisedButton';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
@@ -59,47 +59,17 @@ class SeatView extends React.Component {
 
 
     GetSeats=()=>{
-
-        this.setState({
-            Status:""
-        });
         var ref = this.props.buses[this.props.BusName[this.state.Bus]].BookingRef+this.state.FormatDate;
-        var Bookings = firebase.database().ref("Bookings/"+ref);
-
-        Bookings.on('value',(snap)=>{
-            var Seats =[];
-            if(snap.val()!=null){
-                var seatData ={};
-                var seats = snap.val();
-
-                for(var seat in seats){
-                    seatData = seats[seat];
-                    seatData["No"] = seat
-                    Seats.push(seatData);
-                }
-
-                this.setState({
-                    Seats:Seats
-                })
-            }else{
-                this.setState({
-                    Status :"No Bookings are available"
-                })
-            }
-
-        });
+        this.props.getSeats(ref);
     };
 
     removeSeat=()=>{
-        var ref = this.state.PNR.substring(0,2)+"/"+this.state.PNR.substring(2);
+        var ref = this.state.FormatDate+"/"+this.state.PNR.substring(0,2)+"/"+this.state.PNR.substring(2);
         var seat = this.props.seat.Ref+"/"+this.props.seat.Seats;
-
         var Bookings = firebase.database().ref("PNRS/"+ref);
-
 
         this.handleClose();
         this.props.openProgressDialog("Cancelling the ticket please wait");
-
         return Bookings.set({
             isCancel:true,
             Reason:"Your Ticket is cancelled",
@@ -151,18 +121,16 @@ class SeatView extends React.Component {
 
                         <RaisedButton primary={true} label="View Seats" onClick={this.GetSeats} />
                     </div>
+                    <br/>
                     {
-                        this.state.Seats != null ?
-                            this.state.Seats.map((seat, index) => {
+                        this.props.Seats != null ?
+                            this.props.Seats.map((seat, index) => {
                                 return (
-                                    <BookingObject No={seat.No} Ref={seat.PNR} key={index} open={()=>this.handleOpen(seat.PNR)}/>
+                                    <BookingObject No={seat.No}  Ref={seat.PNR} date={this.state.FormatDate} book={seat.BookedBy} key={index} open={()=>this.handleOpen(seat.PNR)}/>
                                 )
 
                             }) :  <h5>{this.state.Status}</h5>
-
                     }
-
-
                     <Dialog
                         actions={actions}
                         modal={false}
@@ -182,14 +150,16 @@ const mapStateToProps = (state)=> {
     return {
         buses:state.Agent.Buses,
         BusName:state.Agent.BusName,
-        seat:state.Agent.seat
+        seat:state.Agent.seat,
+        Seats:state.Agent.Seats
     };
 };
 function matchDispatchToProps(dispatch){
     const actions={
         openProgressDialog:OpenProgessDialog,
         closeProgressDialog:CloseProgressDialog,
-        handleOpenDialog:handleOpenDialog
+        handleOpenDialog:handleOpenDialog,
+        getSeats:GetSeats
     };
     return bindActionCreators(actions, dispatch);
 }

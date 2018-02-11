@@ -2,23 +2,24 @@ import React from 'react';
 import * as firebase from 'firebase'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
-import {sleeperClicked} from '../actions/index'
+import {handleOpenDialog, sleeperClicked} from '../actions/index'
 
 const sleepStyle={
     backgroundColor:"#33ff99",
     width:"45px",
     height:"80px",
     marginTop:"4px",
-    transition: "all 1s"
+    transition: "all 0.3s"
 };
 
 const sleepStyleSelected={
     backgroundColor:"#3fa9f5",
     width:"45px",
     height:"80px",
-    boxShadow:"2px 2px 10px #2d2d2d",
+    boxShadow:"0px 2px 10px #2d2d2d",
     marginTop:"4px",
-    transition: "all 1s"
+    transition: "all 0.3s",
+    position:"Relative"
 };
 
 const sleepStyleHold={
@@ -26,7 +27,7 @@ const sleepStyleHold={
     width:"45px",
     height:"80px",
     marginTop:"4px",
-    transition: "all 1s"
+    transition: "all 0.3s"
 };
 
 const sleepStyleBooked={
@@ -34,7 +35,7 @@ const sleepStyleBooked={
     width:"45px",
     height:"80px",
     marginTop:"4px",
-    transition: "all 1s"
+    transition: "all 0.3s"
 };
 const pillow={
     width:"25px",
@@ -43,51 +44,71 @@ const pillow={
     boxShadow:"0px 2px 5px #2d2d2d",
     margin:"auto"
 };
+const seatHover={
+    position:"absolute",
+    bottom:85,
+    width:130,
+    left:-30,
+    padding:2,
+    height:75,
+    borderRadius:4,
+    backgroundColor:"#fff",
+    boxShadow:"rgba(45, 45, 45,0.5) 0px 0px 15px 2px"
+};
 class Sleeper extends  React.Component{
 
     constructor(props){
         super(props);
         this.state = {
             hover: false,
-            isBooked:false
+            isBooked:false,
+            isHold:false
         };
 
     }
 
-    componentWillMount(){
-        if(this.props.seat.busLayout){
-            var sleeper = firebase.database().ref('Bookings/'+this.props.seat.busLayout.Ref+"/"+this.props.id);
-            sleeper.on('value',(data)=>{
-                if(data.val() !=null){
-                    var getdate = new Date(data.val().isHold);
-                    var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
+    // componentWillMount(){
+    //     if(this.props.seat.busLayout){
+    //         var sleeper = firebase.database().ref('Bookings/'+this.props.seat.busLayout.Ref+"/"+this.props.id);
+    //         sleeper.on('value',(data)=>{
+    //             if(data.val() !=null){
+    //                 var getdate = new Date(data.val().isHold);
+    //                 var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
+    //
+    //                 if(data.val().isBooked && data.val().isBooked===true){
+    //                     this.setState({
+    //                         isBooked:true
+    //                     })
+    //                 }
+    //
+    //                 if(diff<15){
+    //                     this.setState({
+    //                         isHold:true
+    //                     })
+    //                 }else{
+    //                     this.setState({
+    //                         isHold:false
+    //                     })
+    //                 }
+    //
+    //             }else{
+    //                 this.setState({
+    //                     isHold:false,
+    //                     isBooked:false
+    //                 })
+    //             }
+    //         });
+    //     }
+    //
+    // }
 
-                    if(data.val().isBooked && data.val().isBooked===true){
-                        this.setState({
-                            isBooked:true
-                        })
-                    }
-
-                    if(diff<15){
-                        this.setState({
-                            isHold:true
-                        })
-                    }else{
-                        this.setState({
-                            isHold:false
-                        })
-                    }
-
-                }else{
-                    this.setState({
-                        isHold:false,
-                        isBooked:false
-                    })
-                }
-            });
+    BookSeat=(id,seat)=>{
+        if(this.props.seat.userBucket.length>=4 && !(this.props.seat.Seats[this.props.id]  &&  this.props.seat.Seats[this.props.id].isHold===true)){
+            this.props.Dialog("Can Book 4 seats at a time");
+        }else{
+            this.props.bookSeat(id,seat)
         }
-
-    }
+    };
 
     render(){
         let style={};
@@ -98,7 +119,7 @@ class Sleeper extends  React.Component{
             style=sleepStyle;
         }
 
-        if(this.state.isBooked){
+        if(this.props.seat.Bookings && this.props.seat.Bookings[this.props.id]  &&  this.props.seat.Bookings[this.props.id].isBooked===true){
             return(
                 <div style={sleepStyleBooked}  >
                     <div style={pillow}></div>
@@ -106,7 +127,7 @@ class Sleeper extends  React.Component{
             )
         }
 
-        if(this.state.isHold){
+        if(this.props.seat.Holdings && this.props.seat.Holdings[this.props.id]  &&  this.props.seat.Holdings[this.props.id].isHold===true){
             return(
                 <div style={sleepStyleHold}  >
                     <div style={pillow}></div>
@@ -114,8 +135,16 @@ class Sleeper extends  React.Component{
             )
         }else {
             return (
-                <div style={style} onClick={() => this.props.bookSeat(this.props.id,"SL")}>
+                <div style={style} onClick={() => this.BookSeat(this.props.id,"SL")}>
                     <div style={pillow}></div>
+                    {
+                        this.props.seat.latest && this.props.seat.latest == this.props.id ?
+                            <div style={seatHover}>
+                                Seat no:{this.props.id}<br/>
+                                Seat type:Sleeper <br/>
+                                Price:{this.props.seat.busLayout.Price.SL}
+                            </div>:null
+                    }
                 </div>
             );
 
@@ -127,7 +156,8 @@ class Sleeper extends  React.Component{
 }
 function matchDispatchToProps(dispatch){
     const actions={
-        bookSeat:sleeperClicked
+        bookSeat:sleeperClicked,
+        Dialog:handleOpenDialog
     };
     return bindActionCreators(actions, dispatch);
 }

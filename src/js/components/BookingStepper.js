@@ -140,12 +140,6 @@ class BookingStepper extends React.Component {
         });
     };
 
-    handleAddress=(e,address)=>{
-        this.setState({
-            Address:address
-        });
-    };
-
     handleName=(e,name)=>{
         this.setState({
             Name:name
@@ -153,6 +147,15 @@ class BookingStepper extends React.Component {
     };
 
 
+    handleNextBus=()=>{
+        const {stepIndex} = this.state;
+
+        this.setState({
+            stepIndex: stepIndex+1,
+            finished: stepIndex >= 2,
+        });
+
+    }
 
      handleNext=()=>{
         const {stepIndex} = this.state;
@@ -163,33 +166,47 @@ class BookingStepper extends React.Component {
                     console.log("user successfully signed out");
                 })
             }
+
+            if(!this.props.Layout.busLayout){
+                this.props.Dialog("Please Select a bus to Proceed");
+                return
+            }
+
         }
 
-         if(stepIndex===2){
+         if(stepIndex===2) {
 
-            if(this.state.Email==="" || this.state.Name==="" || this.state.Number==="" || this.state.from==null){
-                this.props.Dialog("Fill all the details");
-                return
-            }
+             if (this.state.Email === "" || this.state.Name === "" || this.state.Number === "" || this.state.from == null) {
+                 this.props.Dialog("Fill all the details");
+                 return
+             }
 
-            var email =this.state.Email;
-            var start = email.length-email.lastIndexOf("@");
-            var end=email.length-email.lastIndexOf(".");
-            if(start<5 || end<3 || email.lastIndexOf("@")<0 || email.lastIndexOf(".")<0){
-                this.props.Dialog("Enter a valid email");
-                return
-            }
+             var email = this.state.Email;
+             var start = email.length - email.lastIndexOf("@");
+             var end = email.length - email.lastIndexOf(".");
+             if (start < 5 || end < 3 || email.lastIndexOf("@") < 0 || email.lastIndexOf(".") < 0) {
+                 this.props.Dialog("Enter a valid email");
+                 return
+             }
 
-            if(!this.state.OtpVerified){
-                this.sendOTP("+91"+this.state.Number);
-                return
-            }
+             if (!this.state.OtpVerified) {
+                 this.sendOTP("+91" + this.state.Number);
+                 return
+             }
 
-            this.bookSelected();
-            this.props.GetHash(this.props.Payment.payment,function (){
-                console.log("Successfull get hash");
-            });
-         }
+             var user={
+                 Name:this.state.Name,
+                 Email:this.state.Email,
+                 Number:this.state.Number,
+                 Address:this.state.Address
+             };
+
+
+             this.bookSelected();
+             this.props.GetHash(this.props.Payment.payment);
+
+        }
+
 
 
 
@@ -201,8 +218,7 @@ class BookingStepper extends React.Component {
          if(stepIndex==3){
              this.submitForm();
          }
-
-    };
+     };
 
     handlePrev=()=>{
         const {stepIndex} = this.state;
@@ -217,7 +233,7 @@ class BookingStepper extends React.Component {
                 return(
                     <div >
                         <SelectSourceDestination mystyle={mystyle}/>
-                        <ShowBusesAndLayout step={this.handleNext} />
+                        <ShowBusesAndLayout step={this.handleNextBus} />
                     </div>
 
                 );
@@ -263,7 +279,7 @@ class BookingStepper extends React.Component {
 
                                     />
                                     <br/>
-                                    <SelectField  floatingLabelText="From"
+                                    <SelectField  floatingLabelText="Boarding Point"
                                                   value={this.state.from}
                                                   onChange={this.handleBoardingSelect}
                                     >
@@ -323,6 +339,8 @@ class BookingStepper extends React.Component {
                         <input type="hidden" name="firstname" value={this.props.Payment.payment.firstname} />
                         <input type="hidden" name="udf1" value={this.props.Payment.payment.udf1} />
                         <input type="hidden" name="udf2" value={this.props.Payment.payment.udf2} />
+                        <input type="hidden" name="udf3" value={this.props.Payment.payment.udf3} />
+
                         <input type="hidden" name="email" value={this.props.Payment.payment.email} />
                         <input type="hidden" name="phone" value={this.props.Payment.payment.phone} />
                         <input type="hidden" name="lastname" value={this.props.Payment.payment.firstname} />

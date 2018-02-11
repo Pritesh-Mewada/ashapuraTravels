@@ -4,7 +4,7 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import DynamicPricing from './DynamicPricing'
-import SelectSourceDestination from '../SelectSourceDestination'
+import SelectSourceAndDestination from './SelectSourceAndDestination'
 import  SelectBusLayout from './SelectBusLayout'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
@@ -52,12 +52,17 @@ class AgentTabs extends Component {
     };
 
     componentWillMount(){
-        if(!firebase.auth().currentUser){
-            this.props.Navigate("/");
-            return
-        }
+        firebase.auth().onAuthStateChanged((user)=>{
+           if(user){
+               console.log(user.email);
+           }else{
+               this.props.Navigate("/");
+           }
+
+        });
         this.props.fetchBus();
     }
+
 
 
     select = (index) => this.setState({selectedIndex: index});
@@ -68,7 +73,7 @@ class AgentTabs extends Component {
                 return(
                     <div>
                         <br/>
-                        <SelectSourceDestination mystyle={mystyle}/>
+                        <SelectSourceAndDestination mystyle={mystyle}/>
                         <br/>
                         <br/>
                         <SelectBusLayout/>
@@ -95,8 +100,8 @@ class AgentTabs extends Component {
     }
     render() {
         return (
-            <div style={{width:"80%",margin:"auto"}}>
-                <div >{this.getStepContent(this.state.selectedIndex)}</div>
+            <div >
+                <div  style={{width:"80%",margin:"auto"}}>{this.getStepContent(this.state.selectedIndex)}</div>
                 <Paper zDepth={3} style={bottomStick}>
                     <BottomNavigation selectedIndex={this.state.selectedIndex}>
                         <BottomNavigationItem

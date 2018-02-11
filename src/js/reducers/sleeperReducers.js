@@ -1,6 +1,3 @@
-// ./src/reducers/bookReducers.js
-
-
 var user={
         name:"Pritesh Mewada",
         address:"Ghartan pada no 2",
@@ -12,17 +9,6 @@ const seats={
     userBucket:[],
     searchedBus:[],
     total:0,
-    busLayout:{
-        Ref: "RangeelaUp3-1-2018tESST",
-        Name: "Rangeela Travels",
-        DateStamp: "3/1/2018",
-        Layout: "rangeelatype1",
-        Price: {
-            ST: 600,
-            SL: 800
-        }
-
-    },
     user:{
         name:"Pritesh Mewada",
         address:"Ghartan pada no 2",
@@ -52,7 +38,7 @@ export default (state = seats, action) => {
             var userBucket = state.userBucket;
             var total=state.total;
             var Seats = state.Seats;
-            var latest =action.seat;
+            var latest=null;
             var payment =state.payment;
 
             if(Seats[action.seat] && Seats[action.seat].isHold===true){
@@ -63,12 +49,19 @@ export default (state = seats, action) => {
                     latest=null
                 }
             }else{
-                Seats[action.seat] = {isHold:true};
+                Seats[action.seat] = {
+                    isHold:true,
+                    Type:action.seatType,
+                    Price:state.busLayout.Price[action.seatType],
+                    No:action.seat
+                };
                 userBucket.push(action.seat);
                 total = total+state.busLayout.Price[action.seatType]
+                latest=action.seat;
             }
             payment.amount = total;
             payment.productinfo = userBucket.toString();
+            payment.seats = JSON.stringify(Seats);
 
             return {...state,
                 userBucket,
@@ -77,7 +70,6 @@ export default (state = seats, action) => {
                 total,
                 payment
             };
-
             break;
         case 'GOT_BUSES':
             return Object.assign({},state,{
@@ -96,20 +88,24 @@ export default (state = seats, action) => {
             var userBucket = [];
             var busLayout = action.data;
 
+            var boarding = busLayout.Boarding;
+            var temp=[];
+            for (var a in boarding){
+                temp.push(boarding[a]);
+            }
+            busLayout.Boarding=temp;
+
             var reqData = {
                 Ref:action.data.Ref,
                 Name:action.data.Name,
                 PNR:action.data.PNR,
                 Time:action.data.Time,
                 Departure:action.data.Departure,
-
             };
 
 
-            console.log(JSON.stringify(reqData));
-
+            payment['Node']=action.data.Node;
             payment['udf1'] = JSON.stringify(reqData);
-
             return {...state,busLayout,userBucket,payment};
 
         case 'STORE_USER':
@@ -135,13 +131,23 @@ export default (state = seats, action) => {
             };
 
             var reqData2={
-                Journey:state.Route.from+" To "+state.Route.to
-            }
+                Journey:state.Route.from+" To "+state.Route.to,
+                Date:state.Route.date
+            };
 
             payment.udf1 = JSON.stringify(reqData);
             payment.udf2 = JSON.stringify(reqData2);
-            payment.productinfo = state.userBucket.toString();
 
+
+            var tempprice=[];
+            for (var a in state.userBucket){
+
+                tempprice.push(state.Seats[state.userBucket[a]].Price);
+            }
+
+            payment.productinfo = state.userBucket.toString();
+            payment.udf3=tempprice.toString();
+            payment.seats = JSON.stringify(state.Seats)
             return Object.assign({},state,{
                 user:action.data,
                 payment:payment
@@ -164,6 +170,37 @@ export default (state = seats, action) => {
             return{...state,
                 busLayout};
 
+        case 'CLEAR_BUCKET':
+            var userBucket =[];
+            var Seats={};
+            var total={};
+            return{...state,userBucket,Seats,total};
+            break;
+
+        case 'STORE_BUS_BOOKINGS':
+            console.log(action);
+            var Bookings = action.data;
+
+            return{...state,Bookings}
+            break;
+        case 'STORE_BUS_HOLDINGS':
+            var temp = action.data;
+            var Holdings={};
+            if(temp){
+                for (var a in temp){
+                    var getdate = new Date(temp[a].isHold);
+                    var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
+                    if(diff<10){
+                        Holdings[a]={
+                            isHold:true,
+                            Number:temp[a].Number,
+                            Name:temp[a].Name
+                        }
+                    }
+                }
+            }
+            return{...state,Holdings}
+            break;
         default:
             return state;
             break;

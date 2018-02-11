@@ -1,12 +1,15 @@
 const seats={
     Buses:{},
-    BusName:[]
+    BusName:[],
+    Seats:null,
 };
-
+var busname,data,Seats,seatData
+;
 export default (state = seats, action) => {
     switch (action.type){
         case 'AGENT_FETCH_BUS':
-            var busname = [];
+
+            busname=[];
 
             for (var name in action.data){
                 busname.push(name);
@@ -34,7 +37,22 @@ export default (state = seats, action) => {
             });
             break;
 
+        case 'AGENT_STORE_SEAT_DATA':
+            Seats=[];
+            data = action.seats;
+            if(data!=null){
+                seatData ={};
+                for(var seat in data){
+                    seatData = data[seat];
+                    seatData["No"] = seat
+                    Seats.push(seatData);
+                }
+                return{...state,Seats}
+            }else{
 
+            }
+
+            break;
 
         default:
             return state;

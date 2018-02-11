@@ -2,11 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 import Sleeper from "../Sleeper"
+import {fetchHoldings, fetchSeats} from "../../actions/index";
+
 import DoubleSleeper from "../DoubleSleeper"
 import DoubleSeats from "../DoubleSeats"
 import Seat from '../Seat'
 import {Tabs,Tab} from 'material-ui/Tabs'
-import {sleeperClicked} from "../../actions/index";
 const containerWidth={
     width:205,
     margin:"auto",
@@ -44,6 +45,11 @@ const tabsStyle={
 
 
 class Hemani extends React.Component{
+    componentDidMount(){
+        console.log(this.props.BusLayout.Ref)
+        this.props.fetchSeats(this.props.BusLayout.Ref);
+        this.props.fetchHoldings(this.props.BusLayout.Ref);
+    }
     render(){
         return(
             <div>
@@ -106,8 +112,8 @@ class Hemani extends React.Component{
 
 const mapStateToProps = (state)=> {
     return {
-        Seats:state.sleeper.Seats,
         BusLayout:state.sleeper.busLayout
+
     };
 };
 
@@ -115,7 +121,8 @@ const mapStateToProps = (state)=> {
 //      > now UserList has this.props.selectUser
 function matchDispatchToProps(dispatch){
     const actions={
-        book: sleeperClicked
+        fetchSeats:fetchSeats,
+        fetchHoldings:fetchHoldings
     };
     return bindActionCreators(actions, dispatch);
 }

@@ -5,7 +5,8 @@ import Sleeper from "../Sleeper"
 import DoubleSleeper from "../DoubleSleeper"
 import DoubleSeats from "../DoubleSeats"
 import {Tabs,Tab} from 'material-ui/Tabs'
-import {sleeperClicked} from "../../actions/index";
+import {fetchHoldings, fetchSeats} from "../../actions/index";
+
 const containerWidth={
     width:250,
     margin:"auto",
@@ -64,6 +65,12 @@ const rotateLast={
 };
 
 class Rangeela extends React.Component{
+    componentDidMount(){
+        console.log(this.props.BusLayout.Ref);
+        this.props.fetchSeats(this.props.BusLayout.Ref);
+        this.props.fetchHoldings(this.props.BusLayout.Ref);
+    }
+
     render(){
         return(
             <div>
@@ -136,7 +143,6 @@ class Rangeela extends React.Component{
 
 const mapStateToProps = (state)=> {
     return {
-        Seats:state.sleeper.Seats,
         BusLayout:state.sleeper.busLayout
     };
 };
@@ -145,7 +151,8 @@ const mapStateToProps = (state)=> {
 //      > now UserList has this.props.selectUser
 function matchDispatchToProps(dispatch){
     const actions={
-        book: sleeperClicked
+        fetchSeats:fetchSeats,
+        fetchHoldings:fetchHoldings
     };
     return bindActionCreators(actions, dispatch);
 }

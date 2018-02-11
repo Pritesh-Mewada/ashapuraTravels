@@ -1,0 +1,103 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	font-family: 'Open Sans', sans-serif;
+	}
+section.knowUs .knowUs_heading , section.contactUs .knowUs_heading {
+	position:relative;
+	padding:10px 15px;
+    background: linear-gradient(90deg , #00acfe, #00ffcd 60%) no-repeat;
+	display:inline-block;
+	color:#fff;
+	font-size:18px;
+}
+section.knowUs .knowUs_heading:before, section.contactUs .knowUs_heading:before{
+	content:"";
+	position:absolute;
+	width: 500%;
+	background:linear-gradient(-592deg , #fec300, #fff600 60%) no-repeat;
+	display:block;
+	height:4px;
+	left:0;
+	bottom:0;
+}
+section.contactUs .knowUs_heading:before{
+	width:445%;}
+section.knowUs p{
+	font-size:15px;
+	color:#666;
+	word-wrap:break-word;
+	} 
+ section.contactUs	.location{
+	 font-size:18px;
+	 font-weight:400;
+	 color:#666;
+	 line-height: 36px;
+	 }
+section.contactUs .officeName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0091c6;
+}
+section.contactUs address{
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+	border-bottom:1px solid #ccc;
+	padding-bottom:15px;
+	}
+section.contactUs a{
+	font-weight:600;
+	text-decoration:none;	
+	}
+section.ticketDone .ticket-booking-table{
+	margin:10% auto;
+	position:relative;}
+section.ticketDone .ticket-booking-table thead  .table_header , section.ticketDone .ticket-booking-table tfoot{
+	background: linear-gradient(45deg , #00acfe, #00ffcd 80%) no-repeat;	
+	
+	}
+section.ticketDone .ticket-booking-table thead tr th , section.ticketDone .ticket-booking-table tfoot tr td{
+	font-size:30px;
+	font-weight:400;
+	text-align:center;
+	color:#fff;
+    padding:5px 0;
+
+
+	}
+section.ticketDone .ticket-booking-table thead .table_det{
+	color:#999;
+	font-size:18px;
+	background-color:#FCFCFC;
+	border:1px solid #ccc;
+	padding:5px 0;
+	}
+section.ticketDone .ticket-booking-table tbody tr td{
+		border:1px solid #ccc;
+		padding:5px 15px;
+		font-size:14px;
+		color:#999;
+		font-weight:600;
+}
+section.ticketDone .DownloadTicketbtn{
+		width:30%;
+		margin:0 5px;
+		background: linear-gradient(90deg , #00acfe, #00ffcd 100%) no-repeat;
+		padding:5px 15px;
+		color:#fff;
+		transition:.5s;
+		border:none;
+		display:block;
+
+
+}
+section.ticketDone .DownloadTicketbtn:hover,section.ticketDone .DownloadTicketbtn:focus{
+		transition:.5s;
+		background: linear-gradient(180deg , #00acfe, #00ffcd 100%) no-repeat;
+		color:#666;
+		font-weight:600;
+		outline:none;
+}
+section.ticketDone .DownloadTicketbtn:focus{
+	color:#fff;}

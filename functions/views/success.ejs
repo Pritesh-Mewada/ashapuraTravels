@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Shree Ashapura Travels</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<section class="ticketDone">
+    <div class="container">
+
+        <table width="600px" class="ticket-booking-table"  border="0" cellpadding="0" cellspacing="0">
+            <thead>
+            <tr class="table_header" >
+                <th colspan="2">Shree Shiv Ashapura Travel</th>
+            </tr>
+
+            <tr>
+                <th colspan="2" class="table_det">Ticket Booking Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Name: </td>
+                <td><%=Name%></td>
+            </tr>
+            <tr>
+                <td>PNR:</td>
+                <td><%=PNR%></td>
+            </tr>
+            <tr>
+                <td>Bus:</td>
+                <td><%=BusName%></td>
+            </tr>
+            <tr>
+                <td>Journey Between:</td>
+                <td><%=Journey%></td>
+            </tr>
+            <tr>
+                <td>Departure: </td>
+                <td><%=Departure%></td>
+            </tr>
+            <tr>
+                <td>Boarding Point: </td>
+                <td><%=Point%></td>
+            </tr>
+            <tr>
+                <td>Seat No: </td>
+                <td><%=Seats%></td>
+            </tr>
+
+            <tr>
+                <td>Amount: </td>
+                <td><i class="fa fa-rupee"></i><%=Amount%></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <button class="btn btn-default DownloadTicketbtn" id="cmd" onclick="window.print();return false;" ><i class="fa fa-print" ></i> Print</button>
+                    <!--<button class="btn btn-default DownloadTicketbtn" id="cmd1" onclick="window.print();return false;" ><i class="fa fa-download" ></i> Download Ticket</button>
+                    --></td>
+            </tr>
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2">Wish To You Happy Journy</td>
+            </tr>
+            </tfoot>
+
+        </table>
+    </div>
+</section>
+</body>
+</html>

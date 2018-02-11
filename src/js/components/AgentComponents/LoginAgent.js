@@ -6,8 +6,10 @@ import TextField from 'material-ui/TextField'
 import {handleOpenDialog,AgentLogin} from "../../actions/index";
 
 const container ={
-    width:"80%",
-    margin:"auto"
+    width:400,
+    margin:"auto",
+    marginTop:100,
+
 };
 
 class LoginAgent extends  React.Component{

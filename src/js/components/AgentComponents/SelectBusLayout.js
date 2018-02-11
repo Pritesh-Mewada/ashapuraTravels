@@ -5,11 +5,13 @@ import {Container ,Row,Col} from 'react-grid-system'
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
 import FontIcon from 'material-ui/FontIcon';
-import {showBusLayout,AgentBookSelected} from '../../actions/index'
+import {showBusLayout, AgentBookSelected, handleOpenDialog} from '../../actions/index'
 import SelectLayout from '../SelectLayout'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField'
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 const iconArrow = {
     fontSize:28,
@@ -39,8 +41,9 @@ class SelectBusLayout extends React.Component{
         super(props);
         this.state = {
             open: false,
-            Name:"",
-            Number:"s"
+            Name:null,
+            Number:null,
+            from:""
         };
     }
 
@@ -61,16 +64,37 @@ class SelectBusLayout extends React.Component{
     handleNumber=(e,name)=>{
         this.setState({Number:name});
     };
+    handleBoardingSelect=(event,index,value)=>{
+        this.setState({
+            from:value
+        });
+    };
 
     handleBook =()=>{
+        if(!this.state.Name || !this.state.Number){
+            this.handleClose();
+            this.props.Dialog("Please fill the details");
+            return;
+        }
+
         this.props.Book({
             Seats:this.props.storage.userBucket,
+            SeatPrice:this.props.storage.Seats,
             Ref:this.props.storage.busLayout.Ref,
-            Name:this.state.Name,
-            Number:this.state.Number
+            BusName:this.props.storage.busLayout.Name,
+            Point:this.props.storage.busLayout.Boarding[this.state.from],
+            CName:this.state.Name,
+            Number:this.state.Number,
+            PNR:this.props.storage.busLayout.PNR,
+            Date:this.props.storage.Route.date,
+            Journey:this.props.storage.Route.from+" To "+this.props.storage.Route.to,
+            Departure:this.props.storage.busLayout.Departure,
+            Amount:this.props.storage.total,
+            JourneyTime:this.props.storage.busLayout.Time
         });
         this.handleClose()
     };
+
 
     render(){
         const actions = [
@@ -162,7 +186,18 @@ class SelectBusLayout extends React.Component{
 
                                 />
                                 <br/>
-                                <h3>Amount to be taken 5000</h3>
+                                <SelectField  floatingLabelText="Boarding Point"
+                                              value={this.state.from}
+                                              onChange={this.handleBoardingSelect}
+                                >
+                                    { this.props.storage.busLayout && this.props.storage.busLayout.Boarding ?
+                                        this.props.storage.busLayout.Boarding.map((place, index) => (
+                                            <MenuItem value={index} key={index} primaryText={place}/>
+                                        )):null
+                                    }
+
+                                </SelectField>
+                                <h3>{"Amount to be taken"+this.props.storage.total}</h3>
                             </Dialog>
                             <br/><br/><br/><br/><br/>
                         </Col>
@@ -180,7 +215,8 @@ class SelectBusLayout extends React.Component{
 function matchDispatchToProps(dispatch){
     const actions={
         showLayout:showBusLayout,
-        Book:AgentBookSelected
+        Book:AgentBookSelected,
+        Dialog:handleOpenDialog
 
     };
     return bindActionCreators(actions, dispatch);

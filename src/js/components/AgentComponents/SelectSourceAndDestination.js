@@ -6,8 +6,8 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Search from 'material-ui/svg-icons/action/search';
 import DatePicker from 'material-ui/DatePicker'
-import {searchBuses} from '../actions/index'
-import {handleOpenDialog,fetchBuses,NavigateTo} from "../actions/index";
+import {searchBuses} from '../../actions/index'
+import {handleOpenDialog,fetchBuses,NavigateTo} from "../../actions/index";
 import * as firebase from 'firebase'
 const selectStyle={
     color:"#fff",
@@ -30,7 +30,7 @@ const calenderStyle={
     fontFamily:"Roboto",
     fontWeight:500
 };
-class SelectSourceDestination extends React.Component {
+class SelectSourceAndDestination extends React.Component {
 
     constructor(props) {
         super(props);
@@ -102,8 +102,6 @@ class SelectSourceDestination extends React.Component {
             places:this.state.places
         };
 
-        console.log(search);
-
         if(search.from==null){
             this.props.dialog("Please Select Source")
             return;
@@ -121,7 +119,8 @@ class SelectSourceDestination extends React.Component {
             return;
         }
         this.props.search(search);
-        this.props.action("/app/bookingStep")
+        this.props.action("/app/agent");
+
     }
 
     handleToSelect(event,index,value){
@@ -159,9 +158,7 @@ class SelectSourceDestination extends React.Component {
                     <SelectField  floatingLabelText="To" value={this.state.to}
                                   onChange={this.handleToSelect}
                                   floatingLabelStyle={selectStyle}
-                                  labelStyle={selectStyle}
-
-                    >
+                                  labelStyle={selectStyle}>
                         {
                             this.state.places.map((place,index) => (
                                 <MenuItem value={index} key={index} primaryText={place} />
@@ -175,7 +172,7 @@ class SelectSourceDestination extends React.Component {
                                  ref='dp'
                     />
                     <span style={calenderStyle}>{this.state.date}</span>
-                    <img src={require('../../images/calander.png')}  alt="calendar_logo" onClick={this.openDatePicker} />
+                    <img src={require('../../../images/calander.png')}  alt="calendar_logo" onClick={this.openDatePicker} />
 
                 </div>
                 <div>
@@ -197,8 +194,8 @@ function matchDispatchToProps(dispatch){
     const actions={
         search:searchBuses,
         get:fetchBuses,
-        action:NavigateTo,
         dialog:handleOpenDialog,
+        action:NavigateTo
 
 
     };
@@ -211,5 +208,5 @@ const mapStateToProps = (state)=> {
 };
 
 
-export default connect(mapStateToProps, matchDispatchToProps)(SelectSourceDestination);
+export default connect(mapStateToProps, matchDispatchToProps)(SelectSourceAndDestination);
 

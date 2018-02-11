@@ -6,32 +6,39 @@ import Raksha from './buses/Raksha'
 import Hemani from './buses/Hemani'
 import Paper from 'material-ui/Paper';
 class SelectLayout extends React.Component{
-
     render(){
-        switch (this.props.busLayout.Layout){
-            case "rangeelatype1" :
-                return(
-                    <Paper zDepth={2}>
-                        <Rangeela/>
-                    </Paper>
+        if(this.props.busLayout){
+            switch (this.props.busLayout.Layout){
+                case "rangeelatype1" :
+                    return(
+                        <Paper zDepth={2}>
+                            <Rangeela/>
+                        </Paper>
 
-                );
-            case "hemanitype1" :
-                return(
-                    <Paper zDepth={2}>
-                        <Hemani/>
-                    </Paper>
+                    );
+                case "hemanitype1" :
+                    return(
+                        <Paper zDepth={2}>
+                            <Hemani/>
+                        </Paper>
 
-                );
-            case "rakshatype1" :
-                return(
-                    <Paper zDepth={2}>
-                        <Raksha/>
-                    </Paper>
-                );
-            default:
+                    );
+                case "rakshatype1" :
+                    return(
+                        <Paper zDepth={2}>
+                            <Raksha/>
+                        </Paper>
+                    );
+                default:
+                    <h1>Please Select a bus</h1>
+            }
+        }else{
+            return(
                 <h1>Please Select a bus</h1>
+            )
+
         }
+
 
 
 

@@ -29,7 +29,7 @@ class BookingObject extends  React.Component {
         }
     }
     componentWillMount(){
-        var ref = this.props.Ref.substring(0,2)+"/"+this.props.Ref.substring(2);
+        var ref = this.props.date+"/"+this.props.Ref.substring(0,2)+"/"+this.props.Ref.substring(2);
         var Bookings = firebase.database().ref("PNRS/"+ref);
         Bookings.once('value').then((snap)=>{
             this.setState({
@@ -49,21 +49,21 @@ class BookingObject extends  React.Component {
             <div>
                 {
                     this.state.data !=null ?
-                        <Paper zDepth={2}>
+                        <Paper zDepth={2} style={{marginBottom:5}}>
                             <div>
                                 <div style={tabsWidth}>
                                     <div>
                                         <h5>{this.state.data.Name}</h5>
                                         <h5>{"Rs: "+this.state.data.Amount}</h5>
-                                        <h5>{"PNR"+this.props.Ref}</h5>
+                                        <h5>{"PNR: "+this.props.Ref}</h5>
                                     </div>
                                     <div>
                                         <h5>{"Seat: "+this.props.No}</h5>
                                         <h5>{"Boarding Point: "+this.state.data.Point}</h5>
                                     </div>
                                     <div>
-                                        <h5>{"Mob No."+this.state.data.Number}</h5>
-                                        <h5>{"Seat Type:"+this.state.data.Type}</h5>
+                                        <h5>{"Mob No: "+this.state.data.Number}</h5>
+                                        <h5>{"Booked by: "+this.props.book}</h5>
                                     </div>
                                 </div>
                                 <div style={{display:"flex",justifyContent:"flex-end"}}>

@@ -6,7 +6,6 @@ const sleeperClicked = (seat,seatType) => {
         type: 'SLEEPER_CLICK',
         seat: seat,
         seatType:seatType
-
     }
 };
 const GetBuses = (data)=>{
@@ -105,26 +104,52 @@ const StoreSeat=(seat)=>{
         type:'AGENT_STORE_SEAT',
         data:seat
     }
-}
+};
+const StoreBusBookings=(seat)=>{
+    return{
+        type:'STORE_BUS_BOOKINGS',
+        data:seat
+    }
+};
+
+const StoreBusHoldings=(seat)=>{
+    return{
+        type:'STORE_BUS_HOLDINGS',
+        data:seat
+    }
+};
+
 // async calls
 const GetHash=(data)=>{
     //dont send the amount let the server to calculate it
-    var preHashString =  data.key + '|' + data.txnid + '|' + data.amount + '|' + data.productinfo + '|' + data.firstname + '|' + data.email + '|' + data.udf1 + '|'+data.udf2+'|||||||||';
-    console.log(preHashString);
+    // var preHashString =  data.key + '|' + data.txnid + '|' + data.amount + '|' + data.productinfo + '|' + data.firstname + '|' + data.email + '|' + data.udf1 + '|'+data.udf2+'|||||||||';
+    // console.log(preHashString);
+    //
     return (dispatch)=>{
         dispatch(OpenProgessDialog("Configuring Please wait"));
         return Axios.post('https://ashapura-travels-8bfb5.firebaseapp.com/gethash',{
-        preHashString:preHashString
-      }).then(response=>{
+            key:data.key,
+            txnid:data.txnid,
+            productinfo:data.productinfo,
+            firstname:data.firstname,
+            email:data.email,
+            udf1:data.udf1,
+            udf2:data.udf2,
+            Ref:data.Node,
+            udf3:data.udf3,
+            seats:data.seats
+        }).then(response=>{
           dispatch(Storehash(response.data));
           dispatch(CloseProgressDialog());
 
-      }).catch(error=>{
+        }).catch(error=>{
           throw error
       })
 
     }
 };
+
+
 const searchBuses =(data)=>{
     return (dispatch)=>{
         dispatch(StoreRoute(data));
@@ -138,6 +163,7 @@ const searchBuses =(data)=>{
     }
 };
 
+
 const fetchBuses = () => {
     return (dispatch) => {
         var buses = firebase.database().ref('Buses');
@@ -147,6 +173,25 @@ const fetchBuses = () => {
 
     };
 };
+const fetchSeats = (ref) => {
+    return (dispatch) => {
+        var buses = firebase.database().ref('Bookings/'+ref);
+        return buses.on('value',(data)=>{
+            dispatch(StoreBusBookings(data.val()))
+        })
+    };
+};
+
+
+const fetchHoldings = (ref) => {
+    return (dispatch) => {
+        var buses = firebase.database().ref('Holdings/'+ref);
+        return buses.on('value',(data)=>{
+            dispatch(StoreBusHoldings(data.val()))
+        })
+    };
+};
+
 
 
 const AgentLogin=(email,password)=>{
@@ -155,7 +200,7 @@ const AgentLogin=(email,password)=>{
         dispatch(OpenProgessDialog("Verifying agent"));
         return signIn.signInWithEmailAndPassword(email, password).then((response)=>{
             dispatch(CloseProgressDialog());
-            dispatch(NavigateTo("/agent"))
+            dispatch(NavigateTo("/app/agent"))
         }).catch(error=>{
             dispatch(CloseProgressDialog());
             dispatch(handleOpenDialog("Error wrong credentials"));
@@ -176,6 +221,23 @@ const BookSlot=(data)=>{
         }).then(()=>{
             dispatch(temp())
         })
+    };
+};
+const StoreAgentSeats=(data)=>{
+  return{
+      type:'AGENT_STORE_SEAT_DATA',
+      seats:data
+  }
+};
+
+const GetSeats=(ref)=>{
+//check if the seat is available or not
+    return (dispatch) => {
+        var Bookings = firebase.database().ref("Bookings/"+ref);
+        return Bookings.on('value',(snap)=>{
+            dispatch(StoreAgentSeats(snap.val()));
+
+        });
     };
 };
 
@@ -218,60 +280,71 @@ const CancelBlockDate=(Block)=>{
     };
 };
 
-const AgentBookSelected=(seatsAvailable)=>{
-//check if the seat is available or not
-    console.log(seatsAvailable)
+const AgentBookSelected=(seats)=>{
+    console.log(seats)
     return (dispatch) => {
-        var book = firebase.database().ref('Bookings/'+seatsAvailable.Ref.toString());
-        return book.once('value')
-            .then((data) => {
+        dispatch(OpenProgessDialog("holding your seats"));
+        var book = firebase.database().ref('Bookings/'+seats.Ref.toString());
+        var PNRS=[];
+        return book.once('value').then((data) => {
                var seatsBooking=data.val();
-                if(!seatsBooking){
+               if(!seatsBooking){
                     seatsBooking={};
+               }
+               for(var a in seats.Seats){
+                   var newPnr = Math.floor((Math.random()*100000000));
+                   PNRS.push({
+                       PNR:newPnr,
+                       seat:seats.Seats[a],
+                       Amount:seats.SeatPrice[seats.Seats[a]].Price
+                   });
+                   seatsBooking[seats.Seats[a]]={
+                        isBooked:true,
+                        BookedBy:firebase.auth().currentUser.email,
+                        PNR:seats.PNR+""+newPnr,
+                   }
+               }
+               console.log(PNRS);
+
+             return book.set(seatsBooking)
+        }).then(()=>{
+            var PNR = firebase.database().ref('PNRS').child(seats.Date).child(seats.PNR);
+            return PNR.once('value');
+        }).then((snap)=>{
+            var PNRBook = firebase.database().ref('PNRS').child(seats.Date).child(seats.PNR);
+            var oldPnr = snap.val();
+            if(!oldPnr){
+                oldPnr={};
+            }
+            for(var object in PNRS){
+                oldPnr[PNRS[object].PNR] ={
+                    Seats:PNRS[object].seat,
+                    Amount:PNRS[object].Amount,
+                    Name:seats.CName,
+                    BusName:seats.BusName,
+                    Number:seats.Number,
+                    Point:seats.Point,
+                    Departure:seats.Departure,
+                    JourneyTime:seats.JourneyTime,
+                    Ref:seats.Ref,
+                    Journey:seats.Journey,
+                    PNR:PNRS[object].PNR,
                 }
-               for(var a in seatsAvailable.Seats){
-
-                   if(!seatsBooking[seatsAvailable.Seats[a]]){
-                        //inflate the seat object
-                        seatsBooking[seatsAvailable.Seats[a]]={
-                            isBooked:true,
-                            Name:seatsAvailable.Name,
-                            Number:seatsAvailable.Number
-                        }
-                   }else{
-                        var getdate = new Date(seatsBooking[seatsAvailable.Seats[a]].isHold);
-                        var diff= Math.ceil(((new Date()).getTime()-getdate.getTime())/60000);
-                        if(diff>15){
-                            //inflate the seat object
-                            seatsBooking[seatsAvailable.Seats[a]]={
-                                isBooked:true,
-                                Name:seatsAvailable.Name,
-                                Number:seatsAvailable.Number
-                            }
-                        }else{
-                            seatsBooking={};
-                            dispatch(handleOpenDialog("Some seats are Not Availabe please implement refresh seat action"));
-                            return
-                        }
-                    }
-                }
-
-                book.set(seatsBooking).then(()=>{
-                   dispatch(ClearBucket())
-                })
-
-
-
-            });
+            }
+            return PNRBook.set(oldPnr);
+        }).then(()=>{
+            dispatch(CloseProgressDialog());
+            dispatch(ClearBucket());
+            dispatch(handleOpenDialog("Seats Booked"));
+        });
     };
 
 };
 
 const BookSelected=(seatsAvailable)=>{
 //check if the seat is available or not
-    console.log(seatsAvailable)
     return (dispatch) => {
-        var book = firebase.database().ref('Bookings/'+seatsAvailable.Ref.toString());
+        var book = firebase.database().ref('Holdings/'+seatsAvailable.Ref.toString());
         return book.once('value')
             .then((data) => {
                 var seatsBooking=data.val();
@@ -313,9 +386,8 @@ const BookSelected=(seatsAvailable)=>{
 
             });
     };
-
 };
 
 
 
-export {AgentLogin,AgentBookSelected,StoreBoarding,StoreSeat,CancelBlockDate,CancelBlock,GetHash,GetUser,fetchBuses,NavigateTo,BlockBus,BookSelected,showBusLayout,sleeperClicked,OpenProgessDialog,CloseProgressDialog,GetBuses,handleOpenDialog,handleCloseDialog,searchBuses,BookSlot}
+export {AgentLogin,fetchHoldings,GetSeats,fetchSeats,AgentBookSelected,StoreBoarding,StoreSeat,CancelBlockDate,CancelBlock,GetHash,GetUser,fetchBuses,NavigateTo,BlockBus,BookSelected,showBusLayout,sleeperClicked,OpenProgessDialog,CloseProgressDialog,GetBuses,handleOpenDialog,handleCloseDialog,searchBuses,BookSlot}

@@ -15,6 +15,11 @@ import IconButton from 'material-ui/IconButton';
 import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
+const selectStyle={
+    color:"#000",
+    fontSize:20,
+    marginBottom:5
+}
 const rowStyle={
     display:"flex",
     justifyContent:"space-between",
@@ -199,6 +204,9 @@ class DynamicPricing extends React.Component{
                                   value={this.state.Bus}
                                   onChange={this.handleFromSelect}
                                   fullWidth={true}
+                                  floatingLabelStyle={selectStyle}
+                                  labelStyle={selectStyle}
+
                     >
                         {
                             this.props.BusName.map((place, index) => (
